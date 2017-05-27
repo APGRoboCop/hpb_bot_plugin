@@ -1,0 +1,12 @@
+/root/Dropbox/src/hpb_bot_plugin/bot.cpp
+/root/Dropbox/src/hpb_bot_plugin/bot_chat.cpp
+/root/Dropbox/src/hpb_bot_plugin/bot_client.cpp
+/root/Dropbox/src/hpb_bot_plugin/bot_combat.cpp
+/root/Dropbox/src/hpb_bot_plugin/bot_models.cpp
+/root/Dropbox/src/hpb_bot_plugin/bot_navigate.cpp
+/root/Dropbox/src/hpb_bot_plugin/bot_start.cpp
+/root/Dropbox/src/hpb_bot_plugin/dll.cpp
+/root/Dropbox/src/hpb_bot_plugin/engine.cpp
+/root/Dropbox/src/hpb_bot_plugin/h_export.cpp
+/root/Dropbox/src/hpb_bot_plugin/util.cpp
+/root/Dropbox/src/hpb_bot_plugin/waypoint.cpp
