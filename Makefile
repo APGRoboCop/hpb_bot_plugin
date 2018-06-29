@@ -2,9 +2,7 @@ TARGET = hpb_bot_mm
 ARCHFLAG = march=i686
 BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp
 
-OPTFLAGS = -mtune=pentium4 -mmmx -msse -msse2 -O2 -m32 -mfpmath=sse \
-		-funroll-loops -ffunction-sections -fomit-frame-pointer \
-		-fexpensive-optimizations -finline-functions -ffast-math \
+OPTFLAGS = -mtune=generic -msse -msse2 -O2 -m32 -mfpmath=sse -Wno-write-strings \
 		-falign-loops=2 -falign-jumps=2 -falign-functions=2 \
 
 SDKTOP = ../metamod-p-37

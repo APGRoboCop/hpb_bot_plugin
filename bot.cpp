@@ -870,13 +870,6 @@ void BotLogoInit(void)
 	}
 }
 
-//Fix for HPB v4.0.6 [APG]RoboCop[CL]
-void UpdateClientData(const edict_s * ent, int sendweapons, clientdata_s * cd)
-{
-	RETURN_META(MRES_IGNORED);
-}
-
-
 void BotPickLogo(bot_t *pBot)
 {
 	bool used;
