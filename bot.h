@@ -436,7 +436,7 @@ void UTIL_ShowMenu( edict_t *pEdict, int slots, int displaytime, bool needmore, 
 void UTIL_BuildFileName(char *filename, char *arg1, char *arg2);
 void GetGameDir (char *game_dir);
 
-void LoadBotChat(void);
+void LoadBotChat();
 void BotTrimBlanks(char *in_string, char *out_string);
 int BotChatTrimTag(char *original_name, char *out_name);
 void BotDropCharacter(char *in_string, char *out_string);

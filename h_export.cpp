@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // h_export.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot_combat.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -48,42 +50,39 @@ extern int bot_chat_lower_percent;
 
 void LoadBotChat(void)
 {
-   FILE *bfp;
-   char filename[256];
-   char buffer[256];
-   char *stat;
-   int section = -1;
-   int i, length;
+	char filename[256];
+	char buffer[256];
+	int section = -1;
 
-   bot_chat_count = 0;
+	bot_chat_count = 0;
    bot_taunt_count = 0;
    bot_whine_count = 0;
 
-   for (i=0; i < 5; i++)
+   for (int i = 0; i < 5; i++)
    {
-      recent_bot_chat[i] = -1;
+       recent_bot_chat[i] = -1;
       recent_bot_taunt[i] = -1;
       recent_bot_whine[i] = -1;
    }
 
-   UTIL_BuildFileName(filename, "HPB_bot_chat.txt", NULL);
+   UTIL_BuildFileName(filename, "HPB_bot_chat.txt", nullptr);
 
-   bfp = fopen(filename, "r");
+   FILE* bfp = fopen(filename, "r");
 
-   while (bfp != NULL)
+   while (bfp != nullptr)
    {
-      stat = fgets(buffer, 80, bfp);
+      char* stat = fgets(buffer, 80, bfp);
 
-      if (stat == NULL)
+      if (stat == nullptr)
       {
          fclose(bfp);
-         bfp = NULL;
+         bfp = nullptr;
          continue;
       }
 
       buffer[80] = 0;  // truncate lines longer than 80 characters
 
-      length = strlen(buffer);
+      int length = strlen(buffer);
 
       if (buffer[length-1] == '\n')
       {
@@ -165,14 +164,11 @@ void LoadBotChat(void)
 
 void BotTrimBlanks(char *in_string, char *out_string)
 {
-   int i, pos;
-   char *dest;
-
-   pos=0;
+	int pos = 0;
    while ((pos < 80) && (in_string[pos] == ' '))  // skip leading blanks
       pos++;
 
-   dest=&out_string[0];
+   char* dest = &out_string[0];
 
    while ((pos < 80) && (in_string[pos]))
    {
@@ -181,7 +177,7 @@ void BotTrimBlanks(char *in_string, char *out_string)
    }
    *dest = 0;  // store the null
 
-   i = strlen(out_string) - 1;
+   int i = strlen(out_string) - 1;
    while ((i > 0) && (out_string[i] == ' '))  // remove trailing blanks
    {
       out_string[i] = 0;
@@ -206,7 +202,7 @@ int BotChatTrimTag(char *original_name, char *out_name)
       if (pos1)
          pos2=strstr(pos1+strlen(tag1[i]), tag2[i]);
       else
-         pos2 = NULL;
+         pos2 = nullptr;
 
       if (pos1 && pos2 && pos1 < pos2)
       {
@@ -224,7 +220,7 @@ int BotChatTrimTag(char *original_name, char *out_name)
 
    BotTrimBlanks(out_name, in_name);
 
-   if (strlen(in_name) == 0)  // is name just a tag?
+   if (in_name[0] == '\0')  // is name just a tag?
    {
       strncpy(in_name, original_name, 31);
       in_name[32] = 0;
@@ -236,7 +232,7 @@ int BotChatTrimTag(char *original_name, char *out_name)
          if (pos1)
             pos2=strstr(pos1+strlen(tag1[i]), tag2[i]);
          else
-            pos2 = NULL;
+            pos2 = nullptr;
 
          if (pos1 && pos2 && pos1 < pos2)
          {
@@ -262,17 +258,14 @@ int BotChatTrimTag(char *original_name, char *out_name)
 
 void BotDropCharacter(char *in_string, char *out_string)
 {
-   int len, pos;
-   int count = 0;
-   char *src, *dest;
-   bool is_bad;
+	int count = 0;
 
-   strcpy(out_string, in_string);
+	strcpy(out_string, in_string);
 
-   len = strlen(out_string);
-   pos = RANDOM_LONG(1, len-1);  // don't drop position zero
+	const int len = strlen(out_string);
+   int pos = RANDOM_LONG(1, len - 1);  // don't drop position zero
 
-   is_bad = !isalpha(out_string[pos]) || (out_string[pos-1] == '%');
+   bool is_bad = !isalpha(out_string[pos]) || (out_string[pos - 1] == '%');
 
    while ((is_bad) && (count < 20))
    {
@@ -283,8 +276,8 @@ void BotDropCharacter(char *in_string, char *out_string)
 
    if (count < 20)
    {
-      src = &out_string[pos+1];
-      dest = &out_string[pos];
+      char* src = &out_string[pos + 1];
+      char* dest = &out_string[pos];
       while (*src)
          *dest++ = *src++;
       *dest = *src;  // copy the null;
@@ -294,18 +287,15 @@ void BotDropCharacter(char *in_string, char *out_string)
 
 void BotSwapCharacter(char *in_string, char *out_string)
 {
-   int len, pos;
-   int count = 0;
-   char temp;
-   bool is_bad;
+	int count = 0;
 
-   strcpy(out_string, in_string);
+	strcpy(out_string, in_string);
 
-   len = strlen(out_string);
-   pos = RANDOM_LONG(1, len-2);  // don't swap position zero
+	const int len = strlen(out_string);
+   int pos = RANDOM_LONG(1, len - 2);  // don't swap position zero
 
-   is_bad = !isalpha(out_string[pos]) || !isalpha(out_string[pos+1]) ||
-            (out_string[pos-1] == '%');
+   bool is_bad = !isalpha(out_string[pos]) || !isalpha(out_string[pos + 1]) ||
+	   (out_string[pos - 1] == '%');
 
    while ((is_bad) && (count < 20))
    {
@@ -317,7 +307,7 @@ void BotSwapCharacter(char *in_string, char *out_string)
 
    if (count < 20)
    {
-      temp = out_string[pos];
+	   const char temp = out_string[pos];
       out_string[pos] = out_string[pos+1];
       out_string[pos+1] = temp;
    }
@@ -326,9 +316,7 @@ void BotSwapCharacter(char *in_string, char *out_string)
 
 void BotChatName(char *original_name, char *out_name)
 {
-   int pos;
-
-   if (RANDOM_LONG(1, 100) <= bot_chat_tag_percent)
+	if (RANDOM_LONG(1, 100) <= bot_chat_tag_percent)
    {
       char temp_name[80];
 
@@ -348,7 +336,7 @@ void BotChatName(char *original_name, char *out_name)
 
    if (RANDOM_LONG(1, 100) <= bot_chat_lower_percent)
    {
-      pos=0;
+      int pos = 0;
       while ((pos < 80) && (out_name[pos]))
       {
          out_name[pos] = tolower(out_name[pos]);
@@ -360,8 +348,7 @@ void BotChatName(char *original_name, char *out_name)
 
 void BotChatText(char *in_text, char *out_text)
 {
-   int pos;
-   char temp_text[81];
+	char temp_text[81];
    int count;
 
    strncpy(temp_text, in_text, 79);
@@ -393,7 +380,7 @@ void BotChatText(char *in_text, char *out_text)
 
    if (RANDOM_LONG(1, 100) <= bot_chat_lower_percent)
    {
-      pos=0;
+      int pos = 0;
       while (temp_text[pos])
       {
          temp_text[pos] = tolower(temp_text[pos]);
@@ -407,12 +394,9 @@ void BotChatText(char *in_text, char *out_text)
 
 void BotChatGetPlayers(void)
 {
-   int index;
-   const char *pName;
+	player_count = 0;
 
-   player_count = 0;
-
-   for (index = 1; index <= gpGlobals->maxClients; index++)
+   for (int index = 1; index <= gpGlobals->maxClients; index++)
    {
       edict_t *pPlayer = INDEXENT(index);
 
@@ -421,7 +405,7 @@ void BotChatGetPlayers(void)
       {
          if (pPlayer->v.netname)
          {
-            pName = STRING(pPlayer->v.netname);
+            const char* pName = STRING(pPlayer->v.netname);
 
             if (*pName != 0)
             {
@@ -438,28 +422,25 @@ void BotChatGetPlayers(void)
 void BotChatFillInName(char *bot_say_msg, char *chat_text,
                        char *chat_name, const char *bot_name)
 {
-   int chat_index, say_index;
-   char *name_pos, *rand_pos;
-   char random_name[64];
-   int index, name_offset, rand_offset;
-   bool is_bad;
+	char random_name[64];
+   int name_offset, rand_offset;
 
-   chat_index = 0;
-   say_index = 0;
+	int chat_index = 0;
+   int say_index = 0;
    bot_say_msg[0] = 0;
 
-   name_pos = strstr(&chat_text[chat_index], "%n");
-   rand_pos = strstr(&chat_text[chat_index], "%r");
+   char* name_pos = strstr(&chat_text[chat_index], "%n");
+   char* rand_pos = strstr(&chat_text[chat_index], "%r");
 
-   while ((name_pos != NULL) || (rand_pos != NULL))
+   while ((name_pos != nullptr) || (rand_pos != nullptr))
    {
-      if (name_pos != NULL)
+      if (name_pos != nullptr)
          name_offset = name_pos - chat_text;
-      if (rand_pos != NULL)
+      if (rand_pos != nullptr)
          rand_offset = rand_pos - chat_text;
 
-      if ((rand_pos == NULL) ||
-          ((name_offset < rand_offset) && (name_pos != NULL)))
+      if ((rand_pos == nullptr) ||
+          ((name_offset < rand_offset) && (name_pos != nullptr)))
       {
          while (&chat_text[chat_index] < name_pos)
             bot_say_msg[say_index++] = chat_text[chat_index++];
@@ -481,10 +462,10 @@ void BotChatFillInName(char *bot_say_msg, char *chat_text,
 
          // pick a name at random from the list of players...
 
-         index = RANDOM_LONG(0, player_count-1);
+         int index = RANDOM_LONG(0, player_count - 1);
 
-         is_bad = (strcmp(player_names[index], chat_name) == 0) ||
-                  (strcmp(player_names[index], bot_name) == 0);
+         bool is_bad = (strcmp(player_names[index], chat_name) == 0) ||
+	         (strcmp(player_names[index], bot_name) == 0);
 
          while ((is_bad) && (count < 20))
          {

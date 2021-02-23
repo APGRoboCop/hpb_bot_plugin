@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -147,14 +149,14 @@ void BotSpawnInit( bot_t *pBot )
 
 	pBot->f_exit_water_time = 0.0;
 
-	pBot->pBotEnemy = NULL;
+	pBot->pBotEnemy = nullptr;
 	pBot->f_bot_see_enemy_time = gpGlobals->time;
 	pBot->f_bot_find_enemy_time = gpGlobals->time;
 	pBot->f_aim_tracking_time = 0.0;
 	pBot->f_aim_x_angle_delta = 0.0;
 	pBot->f_aim_y_angle_delta = 0.0;
 
-	pBot->pBotUser = NULL;
+	pBot->pBotUser = nullptr;
 	pBot->f_bot_use_time = 0.0;
 	pBot->b_bot_say = FALSE;
 	pBot->f_bot_say = 0.0;
@@ -199,7 +201,7 @@ void BotSpawnInit( bot_t *pBot )
 
 	pBot->b_use_capture = FALSE;
 	pBot->f_use_capture_time = 0.0;
-	pBot->pCaptureEdict = NULL;
+	pBot->pCaptureEdict = nullptr;
 
 	pBot->b_spray_logo = FALSE;
 
@@ -218,24 +220,21 @@ void BotSpawnInit( bot_t *pBot )
 }
 
 
-void BotNameInit( void )
+void BotNameInit()
 {
-	FILE *bot_name_fp;
 	char bot_name_filename[256];
-	int str_index;
 	char name_buffer[80];
-	int length, index;
 
-	UTIL_BuildFileName(bot_name_filename, "HPB_bot_names.txt", NULL);
+	UTIL_BuildFileName(bot_name_filename, "HPB_bot_names.txt", nullptr);
 
-	bot_name_fp = fopen(bot_name_filename, "r");
+	FILE* bot_name_fp = fopen(bot_name_filename, "r");
 
-	if (bot_name_fp != NULL)
+	if (bot_name_fp != nullptr)
 	{
 		while ((number_names < MAX_BOT_NAMES) &&
-				 (fgets(name_buffer, 80, bot_name_fp) != NULL))
+				 (fgets(name_buffer, 80, bot_name_fp) != nullptr))
 		{
-			length = strlen(name_buffer);
+			int length = strlen(name_buffer);
 
 			if (name_buffer[length-1] == '\n')
 			{
@@ -243,12 +242,12 @@ void BotNameInit( void )
 				length--;
 			}
 
-			str_index = 0;
+			int str_index = 0;
 			while (str_index < length)
 			{
 				if ((name_buffer[str_index] < ' ') || (name_buffer[str_index] > '~') ||
 					 (name_buffer[str_index] == '"'))
-				for (index=str_index; index < length; index++)
+				for (int index = str_index; index < length; index++)
 					name_buffer[index] = name_buffer[index+1];
 
 				str_index++;
@@ -269,23 +268,20 @@ void BotNameInit( void )
 
 void BotPickName( char *name_buffer )
 {
-	int name_index, index;
-	bool used;
-	edict_t *pPlayer;
 	int attempts = 0;
 
-	name_index = RANDOM_LONG(1, number_names) - 1;  // zero based
+	int name_index = RANDOM_LONG(1, number_names) - 1;  // zero based
 
 	// check make sure this name isn't used
-	used = TRUE;
+	bool used = TRUE;
 
 	while (used)
 	{
 		used = FALSE;
 
-		for (index = 1; index <= gpGlobals->maxClients; index++)
+		for (int index = 1; index <= gpGlobals->maxClients; index++)
 		{
-			pPlayer = INDEXENT(index);
+			edict_t* pPlayer = INDEXENT(index);
 
 			if (pPlayer && !pPlayer->free)
 			{
@@ -318,29 +314,24 @@ void BotPickName( char *name_buffer )
 void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 					 const char *arg3, const char *arg4, const char *arg5 )
 {
-	edict_t *BotEnt;
-	bot_t *pBot;
 	char c_skin[BOT_SKIN_LEN+1];
 	char c_name[BOT_NAME_LEN+1];
 	int skill;
 	int index;
-	int i, j, length;
+	int i;
 	bool found = FALSE;
-	int top_color, bottom_color;
 	char c_topcolor[4], c_bottomcolor[4];
 
-	top_color = -1;
-	bottom_color = -1;
+	int top_color = -1;
+	int bottom_color = -1;
 
 	if ((mod_id == VALVE_DLL) ||
-		 ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect == NULL)) ||
+		 ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect == nullptr)) ||
 		 (mod_id == HOLYWARS_DLL) || (mod_id == DMC_DLL))
 	{
-		int  max_skin_index;
+		const int max_skin_index = number_skins;
 
-		max_skin_index = number_skins;
-
-		if ((arg1 == NULL) || (*arg1 == 0))
+		if ((arg1 == nullptr) || (*arg1 == 0))
 		{
 			index = RANDOM_LONG(0, number_skins-1);
 
@@ -392,7 +383,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 
 		if (found == TRUE)
 		{
-			if ((arg2 != NULL) && (*arg2 != 0))
+			if ((arg2 != nullptr) && (*arg2 != 0))
 			{
 				strncpy( c_name, arg2, BOT_SKIN_LEN-1 );
 				c_name[BOT_SKIN_LEN] = 0;  // make sure c_name is null terminated
@@ -444,7 +435,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 				}
 			}
 
-			if ((arg2 != NULL) && (*arg2 != 0))
+			if ((arg2 != nullptr) && (*arg2 != 0))
 			{
 				strncpy( c_name, arg2, BOT_NAME_LEN-1 );
 				c_name[BOT_NAME_LEN] = 0;  // make sure c_name is null terminated
@@ -464,13 +455,13 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 
 		skill = 0;
 
-		if ((arg3 != NULL) && (*arg3 != 0))
+		if ((arg3 != nullptr) && (*arg3 != 0))
 			skill = atoi(arg3);
 
 		if ((skill < 1) || (skill > 5))
 			skill = default_bot_skill;
 
-		if ((arg4 != NULL) && (*arg4 != 0))
+		if ((arg4 != nullptr) && (*arg4 != 0))
 			top_color = atoi(arg4);
 
 		if ((top_color < 0) || (top_color > 255))
@@ -478,7 +469,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		else
 			sprintf(c_topcolor, "%d", top_color);
 
-		if ((arg5 != NULL) && (*arg5 != 0))
+		if ((arg5 != nullptr) && (*arg5 != 0))
 			bottom_color = atoi(arg5);
 
 		if ((bottom_color < 0) || (bottom_color > 255))
@@ -497,7 +488,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 	}
 	else
 	{
-		if ((arg3 != NULL) && (*arg3 != 0))
+		if ((arg3 != nullptr) && (*arg3 != 0))
 		{
 			strncpy( c_name, arg3, BOT_NAME_LEN-1 );
 			c_name[BOT_NAME_LEN] = 0;  // make sure c_name is null terminated
@@ -512,14 +503,14 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 
 		skill = 0;
 
-		if ((arg4 != NULL) && (*arg4 != 0))
+		if ((arg4 != nullptr) && (*arg4 != 0))
 			skill = atoi(arg4);
 
 		if ((skill < 1) || (skill > 5))
 			skill = default_bot_skill;
 	}
 
-	length = strlen(c_name);
+	int length = strlen(c_name);
 
 	// remove any illegal characters from name...
 	for (i = 0; i < length; i++)
@@ -527,13 +518,13 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		if ((c_name[i] <= ' ') || (c_name[i] > '~') ||
 			 (c_name[i] == '"'))
 		{
-			for (j = i; j < length; j++)  // shuffle chars left (and null)
+			for (int j = i; j < length; j++)  // shuffle chars left (and null)
 				c_name[j] = c_name[j+1];
 			length--;
 		}
 	}
 
-	BotEnt = (*g_engfuncs.pfnCreateFakeClient)( c_name );
+	edict_t* BotEnt = (*g_engfuncs.pfnCreateFakeClient)(c_name);
 
 	if (FNullEnt( BotEnt ))
 	{
@@ -543,16 +534,13 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 	else
 	{
 		char ptr[128];  // allocate space for message from ClientConnect
-		char *infobuffer;
-		int clientIndex;
-		int index;
 
 		if (IsDedicatedServer)
 			printf("Creating HPB bot...\n");
 		else if (pPlayer)
 			ClientPrint( pPlayer, HUD_PRINTNOTIFY, "Creating HPB bot...\n");
 
-		index = 0;
+		int index = 0;
 		while ((bots[index].is_used) && (index < 32))
 			index++;
 
@@ -567,8 +555,8 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 
 		CALL_GAME_ENTITY (PLID, "player", VARS(BotEnt));
 
-		infobuffer = GET_INFOKEYBUFFER( BotEnt );
-		clientIndex = ENTINDEX( BotEnt );
+		char* infobuffer = GET_INFOKEYBUFFER(BotEnt);
+		const int clientIndex = ENTINDEX(BotEnt);
 
 		if (!checked_teamplay)  // check for team play...
 			BotCheckTeamplay();
@@ -611,7 +599,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		// function calls directly the gamedll one, and not ours. You are allowed to call this
 		// an "awful hack".
 
-		while ((i < 32) && (clients[i] != NULL))
+		while ((i < 32) && (clients[i] != nullptr))
 			i++;
 
 		if (i < 32)
@@ -626,7 +614,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 
 		// initialize all the variables for this bot...
 
-		pBot = &bots[index];
+		bot_t* pBot = &bots[index];
 
 		pBot->is_used = TRUE;
 		pBot->respawn_state = RESPAWN_IDLE;
@@ -653,7 +641,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 			pBot->start_action = MSG_TFC_IDLE;
 		else if (mod_id == CSTRIKE_DLL)
 			pBot->start_action = MSG_CS_IDLE;
-		else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL))
+		else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != nullptr))
 			pBot->start_action = MSG_OPFOR_IDLE;
 		else if (mod_id == FRONTLINE_DLL)
 			pBot->start_action = MSG_FLF_IDLE;
@@ -705,14 +693,14 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		pBot->bot_class = -1;
 
 		if ((mod_id == TFC_DLL) || (mod_id == CSTRIKE_DLL) ||
-			 ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL)) ||
+			 ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != nullptr)) ||
 			 (mod_id == FRONTLINE_DLL) || (mod_id == WIZARDWARS_DLL) || (mod_id == SWARM_DLL))
 		{
-			if ((arg1 != NULL) && (arg1[0] != 0))
+			if ((arg1 != nullptr) && (arg1[0] != 0))
 			{
 				pBot->bot_team = atoi(arg1);
 
-				if ((arg2 != NULL) && (arg2[0] != 0))
+				if ((arg2 != nullptr) && (arg2[0] != 0))
 				{
 					pBot->bot_class = atoi(arg2);
 				}
@@ -722,7 +710,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 }
 
 
-int BotInFieldOfView(bot_t *pBot, Vector dest)
+int BotInFieldOfView(bot_t *pBot, const Vector dest)
 {
 	// find angles from source to destination...
 	Vector entity_angles = UTIL_VecToAngles( dest );
@@ -753,7 +741,7 @@ int BotInFieldOfView(bot_t *pBot, Vector dest)
 }
 
 
-bool BotEntityIsVisible( bot_t *pBot, Vector dest )
+bool BotEntityIsVisible( bot_t *pBot, const Vector dest )
 {
 	TraceResult tr;
 
@@ -769,15 +757,14 @@ bool BotEntityIsVisible( bot_t *pBot, Vector dest )
 		return FALSE;
 }
 
-void BotLogoInit(void)
+void BotLogoInit()
 {
 	FILE *bot_logo_fp;
 	char bot_logo_filename[256];
 	char logo_buffer[80];
-	int length, index;
+	int length;
 
 #ifndef __linux__
-	HANDLE h_logo;
 	char dir_name[32];
 	char decal_filename[256];
 	DWORD dwDummy;
@@ -798,27 +785,27 @@ void BotLogoInit(void)
 			return;  // file not found
 	}
 
-	h_logo = CreateFile(decal_filename, GENERIC_READ, FILE_SHARE_READ,
-							  NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	const HANDLE h_logo = CreateFile(decal_filename, GENERIC_READ, FILE_SHARE_READ,
+	                                 nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 	if (h_logo == INVALID_HANDLE_VALUE)
 		return;  // can't open file
 
-	if (!ReadFile(h_logo, &wad_header, sizeof(wadinfo_t), &dwDummy, NULL))
+	if (!ReadFile(h_logo, &wad_header, sizeof(wadinfo_t), &dwDummy, nullptr))
 	{
 		CloseHandle(h_logo);  // can't read wad header
 		return;
 	}
 
-	if (SetFilePointer(h_logo, wad_header.infotableofs, NULL, FILE_BEGIN) == 0)
+	if (SetFilePointer(h_logo, wad_header.infotableofs, nullptr, FILE_BEGIN) == 0)
 	{
 		CloseHandle(h_logo);
 		return;  // can't seek to lump info table
 	}
 
-	for (index=0; index < wad_header.numlumps; index++)
+	for (int index = 0; index < wad_header.numlumps; index++)
 	{
-		if (!ReadFile(h_logo, &lump_info, sizeof(lumpinfo_t), &dwDummy, NULL))
+		if (!ReadFile(h_logo, &lump_info, sizeof(lumpinfo_t), &dwDummy, nullptr))
 		{
 			CloseHandle(h_logo);  // can't read lump info
 			return;
@@ -841,14 +828,14 @@ void BotLogoInit(void)
 
 #endif
 
-	UTIL_BuildFileName(bot_logo_filename, "HPB_bot_logo.cfg", NULL);
+	UTIL_BuildFileName(bot_logo_filename, "HPB_bot_logo.cfg", nullptr);
 
 	bot_logo_fp = fopen(bot_logo_filename, "r");
 
-	if (bot_logo_fp != NULL)
+	if (bot_logo_fp != nullptr)
 	{
 		while ((num_logos < MAX_BOT_LOGOS) &&
-				 (fgets(logo_buffer, 80, bot_logo_fp) != NULL))
+				 (fgets(logo_buffer, 80, bot_logo_fp) != nullptr))
 		{
 			length = strlen(logo_buffer);
 
@@ -872,27 +859,22 @@ void BotLogoInit(void)
 
 void BotPickLogo(bot_t *pBot)
 {
-	bool used;
-	int logo_index;
-	int check_count;
-	int index;
-
 	pBot->logo_name[0] = 0;
 
 	if (num_logos == 0)
 		return;
 
-	logo_index = RANDOM_LONG(1, num_logos) - 1;  // zero based
+	int logo_index = RANDOM_LONG(1, num_logos) - 1;  // zero based
 
 	// check make sure this name isn't used
-	used = TRUE;
-	check_count = 0;
+	bool used = TRUE;
+	int check_count = 0;
 
 	while ((used) && (check_count < MAX_BOT_LOGOS))
 	{
 		used = FALSE;
 
-		for (index=0; index < 32; index++)
+		for (int index = 0; index < 32; index++)
 		{
 			if (bots[index].is_used)
 			{
@@ -918,15 +900,13 @@ void BotPickLogo(bot_t *pBot)
 
 void BotSprayLogo(edict_t *pEntity, char *logo_name)
 {
-	int index;
 	TraceResult pTrace;
-	Vector v_src, v_dest;
 	MAKE_VECTORS(pEntity->v.v_angle);
-	v_src = pEntity->v.origin + pEntity->v.view_ofs;
-	v_dest = v_src + gpGlobals->v_forward * 80;
+	const Vector v_src = pEntity->v.origin + pEntity->v.view_ofs;
+	const Vector v_dest = v_src + gpGlobals->v_forward * 80;
 	UTIL_TraceLine( v_src, v_dest, ignore_monsters, pEntity->v.pContainingEntity, &pTrace );
 
-	index = DECAL_INDEX(logo_name);
+	int index = DECAL_INDEX(logo_name);
 
 	if (index < 0)
 		return;
@@ -959,13 +939,11 @@ void BotSprayLogo(edict_t *pEntity, char *logo_name)
 
 void BotFindItem( bot_t *pBot )
 {
-	edict_t *pent = NULL;
-	edict_t *pPickupEntity = NULL;
+	edict_t *pent = nullptr;
+	edict_t *pPickupEntity = nullptr;
 	Vector pickup_origin;
 	Vector entity_origin;
 	float radius = 500;
-	bool can_pickup;
-	float min_distance;
 	char item_name[40];
 	TraceResult tr;
 	Vector vecStart;
@@ -973,7 +951,7 @@ void BotFindItem( bot_t *pBot )
 	int angle_to_entity;
 	edict_t *pEdict = pBot->pEdict;
 
-	pBot->pBotPickupItem = NULL;
+	pBot->pBotPickupItem = nullptr;
 
 	// use a MUCH smaller search radius when waypoints are available
 	if ((num_waypoints > 0) && (pBot->curr_waypoint_index != -1))
@@ -981,11 +959,11 @@ void BotFindItem( bot_t *pBot )
 	else
 		radius = 500.0;
 
-	min_distance = radius + 1.0;
+	float min_distance = radius + 1.0;
 
-	while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, radius )) != NULL)
+	while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, radius )) != nullptr)
 	{
-		can_pickup = FALSE;  // assume can't use it until known otherwise
+		bool can_pickup = FALSE;  // assume can't use it until known otherwise
 
 		strcpy(item_name, STRING(pent->v.classname));
 
@@ -1024,7 +1002,7 @@ void BotFindItem( bot_t *pBot )
 				if (tr.flFraction >= 1.0)
 				{
 					// find distance to item for later use...
-					float distance = (vecEnd - vecStart).Length( );
+					const float distance = (vecEnd - vecStart).Length( );
 
 					// use the ladder about 100% of the time, if haven't
 					// used a ladder in at least 5 seconds...
@@ -1052,7 +1030,7 @@ void BotFindItem( bot_t *pBot )
 				if (strcmp(item_name, STRING(tr.pHit->v.classname)) == 0)
 				{
 					// find distance to item for later use...
-					float distance = (vecEnd - vecStart).Length( );
+					const float distance = (vecEnd - vecStart).Length( );
 
 					// check if entity is wall mounted health charger...
 					if (strcmp("func_healthcharger", item_name) == 0)
@@ -1245,7 +1223,7 @@ void BotFindItem( bot_t *pBot )
 				// check if entity is an armed tripmine
 				else if (strcmp("monster_tripmine", item_name) == 0)
 				{
-					float distance = (pent->v.origin - pEdict->v.origin).Length( );
+					const float distance = (pent->v.origin - pEdict->v.origin).Length( );
 
 					if (pBot->b_see_tripmine)
 					{
@@ -1289,12 +1267,12 @@ void BotFindItem( bot_t *pBot )
 				else if ((mod_id == FRONTLINE_DLL) && (!pBot->defender) &&
 							(strcmp("capture_point", item_name) == 0))
 				{
-					int team = UTIL_GetTeam(pEdict);  // skin and team must match
+					const int team = UTIL_GetTeam(pEdict);  // skin and team must match
 
 					// check if flag not set and point not captured...
 					if ((!pBot->b_use_capture) && (pent->v.skin == (1 - team)))
 					{
-						float distance = (pent->v.origin - pEdict->v.origin).Length( );
+						const float distance = (pent->v.origin - pEdict->v.origin).Length( );
 
 						// check if close enough and facing it directly...
 						if ((distance < FLF_PLAYER_SEARCH_RADIUS) &&
@@ -1320,7 +1298,7 @@ void BotFindItem( bot_t *pBot )
 							(strcmp("halo", item_name) == 0))
 				{
 					// make sure halo isn't owned by somebody
-					if (pent->v.owner == NULL)
+					if (pent->v.owner == nullptr)
 					{
 						can_pickup = TRUE;
 					}
@@ -1331,7 +1309,7 @@ void BotFindItem( bot_t *pBot )
 
 		if (can_pickup) // if the bot found something it can pickup...
 		{
-			float distance = (entity_origin - pEdict->v.origin).Length( );
+			const float distance = (entity_origin - pEdict->v.origin).Length( );
 
 			// see if it's the closest item so far...
 			if (distance < min_distance)
@@ -1343,12 +1321,12 @@ void BotFindItem( bot_t *pBot )
 		}
 	}  // end while loop
 
-	if (pPickupEntity != NULL)
+	if (pPickupEntity != nullptr)
 	{
 		// let's head off toward that item...
-		Vector v_item = pickup_origin - pEdict->v.origin;
+		const Vector v_item = pickup_origin - pEdict->v.origin;
 
-		Vector bot_angles = UTIL_VecToAngles( v_item );
+		const Vector bot_angles = UTIL_VecToAngles( v_item );
 
 		pEdict->v.ideal_yaw = bot_angles.y;
 
@@ -1361,7 +1339,6 @@ void BotFindItem( bot_t *pBot )
 
 bool BotLookForMedic( bot_t *pBot )
 {
-	int i;
 	Vector vecEnd;
 	edict_t *pEdict = pBot->pEdict;
 
@@ -1376,7 +1353,7 @@ bool BotLookForMedic( bot_t *pBot )
 	if (medic_class)
 	{
 		// search the world for players...
-		for (i = 1; i <= gpGlobals->maxClients; i++)
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
 		{
 			edict_t *pPlayer = INDEXENT(i);
 
@@ -1387,8 +1364,8 @@ bool BotLookForMedic( bot_t *pBot )
 				if (!IsAlive(pPlayer))
 					continue;
 
-				int player_team = UTIL_GetTeam(pPlayer);
-				int bot_team = UTIL_GetTeam(pEdict);
+				const int player_team = UTIL_GetTeam(pPlayer);
+				const int bot_team = UTIL_GetTeam(pEdict);
 
 				// don't look for your enemies...
 				if ((bot_team != player_team) &&
@@ -1405,7 +1382,7 @@ bool BotLookForMedic( bot_t *pBot )
 				if (FInViewCone( &vecEnd, pEdict ) &&
 					 FVisible( vecEnd, pEdict ))
 				{
-					float distance = (pPlayer->v.origin - pEdict->v.origin).Length();
+					const float distance = (pPlayer->v.origin - pEdict->v.origin).Length();
 
 					if (distance < 1000)
 					{
@@ -1422,14 +1399,13 @@ bool BotLookForMedic( bot_t *pBot )
 
 bool BotLookForGrenades( bot_t *pBot )
 {
-	edict_t *pent;
 	Vector entity_origin;
-	float radius = 500;
+	const float radius = 500;
 	char classname[40];
 	edict_t *pEdict = pBot->pEdict;
 
-	pent = NULL;
-	while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, radius )) != NULL)
+	edict_t* pent = nullptr;
+	while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, radius )) != nullptr)
 	{
 		strcpy(classname, STRING(pent->v.classname));
 
@@ -1588,7 +1564,7 @@ void BotThink( bot_t *pBot )
 
 			// did another player kill this bot AND bot whine messages loaded AND
 			// has the bot been alive for at least 15 seconds AND
-			if ((pBot->killer_edict != NULL) && (bot_whine_count > 0) &&
+			if ((pBot->killer_edict != nullptr) && (bot_whine_count > 0) &&
 				 ((pBot->f_bot_spawn_time + 15.0) <= gpGlobals->time))
 			{
 				int whine_index;
@@ -1765,9 +1741,9 @@ void BotThink( bot_t *pBot )
 		if (RANDOM_LONG(1, 100) <= 80)  // only vote 80% of the time
 		{
 			if (RANDOM_LONG(1, 100) <= 50)
-				FakeClientCommand(pEdict, "vote_yes", NULL, NULL);
+				FakeClientCommand(pEdict, "vote_yes", nullptr, nullptr);
 			else
-				FakeClientCommand(pEdict, "vote_no", NULL, NULL);
+				FakeClientCommand(pEdict, "vote_no", nullptr, nullptr);
 		}
 
 		pBot->f_start_vote_time = gpGlobals->time + RANDOM_LONG(120, 600);
@@ -1777,9 +1753,9 @@ void BotThink( bot_t *pBot )
 		 (pBot->f_start_vote_time < gpGlobals->time))
 	{
 		if (holywars_gamemode == 0)  // currently deathmatch?
-			 FakeClientCommand(pEdict, "callvote_instagib", NULL, NULL);
+			 FakeClientCommand(pEdict, "callvote_instagib", nullptr, nullptr);
 		else
-			 FakeClientCommand(pEdict, "callvote_deathmatch", NULL, NULL);
+			 FakeClientCommand(pEdict, "callvote_deathmatch", nullptr, nullptr);
 
 		pBot->f_start_vote_time = gpGlobals->time + RANDOM_LONG(120, 600);
 	}
@@ -1815,7 +1791,7 @@ void BotThink( bot_t *pBot )
 
 	// check if time to check for player sounds (if don't already have enemy)
 	if ((pBot->f_sound_update_time <= gpGlobals->time) &&
-		 (pBot->pBotEnemy == NULL))
+		 (pBot->pBotEnemy == nullptr))
 	{
 		int ind;
 		edict_t *pPlayer;
@@ -1917,9 +1893,9 @@ void BotThink( bot_t *pBot )
 			}
 		}
 		else
-			pBot->pBotEnemy = NULL;  // clear enemy pointer (no ememy for you!)
+			pBot->pBotEnemy = nullptr;  // clear enemy pointer (no ememy for you!)
 
-		if (pBot->pBotEnemy != NULL)  // does an enemy exist?
+		if (pBot->pBotEnemy != nullptr)  // does an enemy exist?
 		{
 			BotShootAtEnemy( pBot );  // shoot at the enemy
 
@@ -1934,7 +1910,7 @@ void BotThink( bot_t *pBot )
 		}
 
 		// is bot being "used" and can still follow "user"?
-		else if ((pBot->pBotUser != NULL) && BotFollowUser( pBot ))
+		else if ((pBot->pBotUser != nullptr) && BotFollowUser( pBot ))
 		{
 			// do nothing here!
 			;
@@ -2206,7 +2182,7 @@ void BotThink( bot_t *pBot )
 					// check if the bot is facing the correct direction yet...
 					if (yaw_degrees <= 1.0)
 					{
-						FakeClientCommand(pEdict, "build", "2", NULL);
+						FakeClientCommand(pEdict, "build", "2", nullptr);
 
 						pBot->b_build_sentrygun = FALSE;
 
@@ -2216,11 +2192,11 @@ void BotThink( bot_t *pBot )
 				}
 				else  // need to "attack" this sentrygun to upgrade it...
 				{
-					edict_t *pent = NULL;
+					edict_t *pent = nullptr;
 
 					pBot->b_build_sentrygun = FALSE;
 
-					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0 )) != NULL)
+					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0 )) != nullptr)
 					{
 						if (strcmp(STRING(pent->v.classname), "building_sentrygun") == 0)
 						{
@@ -2252,7 +2228,7 @@ void BotThink( bot_t *pBot )
 					// check if the bot is facing the correct direction yet...
 					if (yaw_degrees <= 1.0)
 					{
-						FakeClientCommand(pEdict, "build", "1", NULL);
+						FakeClientCommand(pEdict, "build", "1", nullptr);
 
 						pBot->b_build_dispenser = FALSE;
 
@@ -2262,11 +2238,11 @@ void BotThink( bot_t *pBot )
 				}
 				else  // need to "attack" this dispenser to refill it...
 				{
-					edict_t *pent = NULL;
+					edict_t *pent = nullptr;
 
 					pBot->b_build_dispenser = FALSE;
 
-					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0 )) != NULL)
+					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0 )) != nullptr)
 					{
 						if (strcmp(STRING(pent->v.classname), "building_dispenser") == 0)
 						{
@@ -2315,7 +2291,7 @@ void BotThink( bot_t *pBot )
 				// it is time to look for a waypoint AND
 				// there are waypoints in this level...
 
-				if ((pBot->pBotPickupItem == NULL) &&
+				if ((pBot->pBotPickupItem == nullptr) &&
 					 (pBot->f_look_for_waypoint_time <= gpGlobals->time) &&
 					 (num_waypoints != 0))
 				{
@@ -2471,7 +2447,7 @@ void BotThink( bot_t *pBot )
 						BotRandomTurn(pBot);
 
 						// is the bot trying to get to an item?...
-						if (pBot->pBotPickupItem != NULL)
+						if (pBot->pBotPickupItem != nullptr)
 						{
 							// don't look for items for a while since the bot
 							// could be stuck trying to get to an item
@@ -2484,7 +2460,7 @@ void BotThink( bot_t *pBot )
 				// (don't pause on ladders or while being "used"...
 				if ((RANDOM_LONG(1, 1000) <= pause_frequency[pBot->bot_skill]) &&
 					 (pEdict->v.movetype != MOVETYPE_FLY) &&
-					 (pBot->pBotUser == NULL))
+					 (pBot->pBotUser == nullptr))
 				{
 					// set the time that the bot will stop "pausing"
 					pBot->f_pause_time = gpGlobals->time +
@@ -2544,7 +2520,7 @@ void BotThink( bot_t *pBot )
 		// check if the waypoint is a sniper waypoint AND
 		// bot isn't currently aiming at an ememy...
 		if ((waypoints[pBot->curr_waypoint_index].flags & W_FL_SNIPER) &&
-			 (pBot->pBotEnemy == NULL))
+			 (pBot->pBotEnemy == nullptr))
 		{
 			if ((mod_id != TFC_DLL) ||
 				 ((mod_id == TFC_DLL) && (pEdict->v.playerclass == TFC_CLASS_SNIPER)) ||
@@ -2675,7 +2651,7 @@ void BotThink( bot_t *pBot )
 				if (RANDOM_LONG(1, 100) <= 50)
 				{
 					// yell "saveme" and stand still for 3.0 seconds
-					FakeClientCommand(pEdict, "saveme", NULL, NULL);
+					FakeClientCommand(pEdict, "saveme", nullptr, nullptr);
 					pBot->f_medic_pause_time = gpGlobals->time + 3.0;
 				}
 
@@ -2690,7 +2666,7 @@ void BotThink( bot_t *pBot )
 						 (pBot->f_medic_yell_time <= gpGlobals->time))
 					{
 						// yell "saveme" in case there's a medic within earshot
-						FakeClientCommand(pEdict, "saveme", NULL, NULL);
+						FakeClientCommand(pEdict, "saveme", nullptr, nullptr);
 
 						pBot->f_medic_yell_time = gpGlobals->time + 10.0;
 					}

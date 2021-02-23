@@ -112,3 +112,4 @@ Release/HPB_bot_mm.exp
 Release/HPB_bot_mm.dll
 Release/HPB_bot_mm.bsc
 Release/h_export.obj
+*.o

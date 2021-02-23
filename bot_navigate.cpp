@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot_navigate.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -51,10 +53,10 @@ unsigned char x_welcome_msg[] = {
 };
 
 
-extern void BotCheckTeamplay(void);
+extern void BotCheckTeamplay();
 
 
-void welcome_init(void)
+void welcome_init()
 {
 	for (int i=0; i < x_welcome_msg_len; i++)
 	{
@@ -82,20 +84,17 @@ void BotFixIdealPitch(edict_t *pEdict)
 float BotChangePitch( bot_t *pBot, float speed )
 {
 	edict_t *pEdict = pBot->pEdict;
-	float ideal;
-	float current;
 	float current_180;  // current +/- 180 degrees
-	float diff;
-	
+
 	// turn from the current v_angle pitch to the idealpitch by selecting
 	// the quickest way to turn to face that direction
 	
-	current = pEdict->v.v_angle.x;
-	
-	ideal = pEdict->v.idealpitch;
+	float current = pEdict->v.v_angle.x;
+
+	const float ideal = pEdict->v.idealpitch;
 	
 	// find the difference in the current and ideal angle
-	diff = fabs(current - ideal);
+	const float diff = fabs(current - ideal);
 	
 	speed = speed * pBot->f_frame_time;  // angles per second
 	
@@ -166,20 +165,17 @@ void BotFixIdealYaw(edict_t *pEdict)
 float BotChangeYaw( bot_t *pBot, float speed )
 {
 	edict_t *pEdict = pBot->pEdict;
-	float ideal;
-	float current;
 	float current_180;  // current +/- 180 degrees
-	float diff;
-	
+
 	// turn from the current v_angle yaw to the ideal_yaw by selecting
 	// the quickest way to turn to face that direction
 	
-	current = pEdict->v.v_angle.y;
-	
-	ideal = pEdict->v.ideal_yaw;
+	float current = pEdict->v.v_angle.y;
+
+	const float ideal = pEdict->v.ideal_yaw;
 	
 	// find the difference in the current and ideal angle
-	diff = fabs(current - ideal);
+	const float diff = fabs(current - ideal);
 	
 	// speed that we can turn during this frame...
 	speed = speed * pBot->f_frame_time;
@@ -238,11 +234,11 @@ float BotChangeYaw( bot_t *pBot, float speed )
 
 bool BotFindWaypoint( bot_t *pBot )
 {
-	int index, select_index;
+	int index;
 	int team;
-	PATH *pPath = NULL;
+	PATH *pPath = nullptr;
 	int path_index;
-	float distance, min_distance[3];
+	float min_distance[3];
 	int min_index[3];
 	
 	edict_t *pEdict = pBot->pEdict;
@@ -271,7 +267,7 @@ bool BotFindWaypoint( bot_t *pBot )
 			(index != pBot->prev_waypoint_index[4]))
 		{
 			// find the distance from the bot to this waypoint
-			distance = (pEdict->v.origin - waypoints[index].origin).Length();
+			const float distance = (pEdict->v.origin - waypoints[index].origin).Length();
 			
 			if (distance < min_distance[0])
 			{
@@ -303,7 +299,7 @@ bool BotFindWaypoint( bot_t *pBot )
 		index = WaypointFindPath(&pPath, &path_index, pBot->curr_waypoint_index, team);
 	}
 	
-	select_index = -1;
+	int select_index = -1;
 	
 	// about 20% of the time choose a waypoint at random
 	// (don't do this any more often than every 10 seconds)
@@ -386,9 +382,9 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 	// check if a goal item exists...
 	if ((mod_id == TFC_DLL) || (mod_id == WIZARDWARS_DLL))
 	{
-		pent = NULL;
+		pent = nullptr;
 		
-		while ((pent = UTIL_FindEntityByClassname( pent, "item_tfgoal" )) != NULL)
+		while ((pent = UTIL_FindEntityByClassname( pent, "item_tfgoal" )) != nullptr)
 		{
 			if (pent->v.owner == pEdict)  // is this bot carrying the item?
 			{
@@ -402,7 +398,7 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 				FVisible( pent->v.origin, pEdict))
 			{
 				// check if the flag has an owner...
-				if (pent->v.owner != NULL)
+				if (pent->v.owner != nullptr)
 				{
 					// get the team for the owner of the flag...
 					int player_team = UTIL_GetTeam(pent->v.owner);
@@ -479,11 +475,11 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 			}
 		}
 	}
-	else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL))
+	else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != nullptr))
 	{
-		pent = NULL;
+		pent = nullptr;
 		
-		while ((pent = UTIL_FindEntityByClassname( pent, "item_ctfflag" )) != NULL)
+		while ((pent = UTIL_FindEntityByClassname( pent, "item_ctfflag" )) != nullptr)
 		{
 			// is this bot carrying the item? (after capture bug fix by Whistler)
 			if ((pent->v.owner == pEdict) && (pent->v.origin == pEdict->v.origin))
@@ -510,7 +506,7 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 				if (skin == team)
 				{
 					// is and enemy carrying our flag/card?
-					if (pent->v.owner != NULL)
+					if (pent->v.owner != nullptr)
 					{
 						// kill the man with the flag/card!
 						pBot->pBotEnemy = pent->v.owner;
@@ -523,7 +519,7 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 				else  // flag/card is for another team!
 				{
 					// check if someone is NOT carrying the flag/card...
-					if (pent->v.owner == NULL)
+					if (pent->v.owner == nullptr)
 					{
 						// find the nearest waypoint to the flag/card...
 						index = WaypointFindNearest(pent->v.origin, pEdict, 500, team);
@@ -604,7 +600,7 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 		{
 			// is the bot currently heading toward halo AND halo is gone?
 			if ((waypoints[pBot->waypoint_goal].flags & W_FL_FLAG) &&
-				(holywars_saint != NULL) && (holywars_gamemode == 1))
+				(holywars_saint != nullptr) && (holywars_gamemode == 1))
 			{
 				pBot->waypoint_goal = -1;
 			}
@@ -880,9 +876,9 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 				(waypoints[pBot->curr_waypoint_index].flags & W_FL_FLF_CAP))
 			{
 				// it's a capture point
-				pent = NULL;
+				pent = nullptr;
 				
-				while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 100.0 )) != NULL)
+				while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 100.0 )) != nullptr)
 				{
 					if (strcmp(STRING(pent->v.classname), "capture_point") == 0)
 					{
@@ -1168,9 +1164,9 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 			else
 				capture_color = 1 - team;  // attackers
 			
-			pent = NULL;
+			pent = nullptr;
 			
-			while ((pent = UTIL_FindEntityByClassname( pent, "capture_point" )) != NULL)
+			while ((pent = UTIL_FindEntityByClassname( pent, "capture_point" )) != nullptr)
 			{
 				if (pent->v.skin != capture_color)  // skip it if already captured
 					continue;
@@ -1399,7 +1395,6 @@ bool BotHeadTowardWaypoint( bot_t *pBot )
 
 void BotOnLadder( bot_t *pBot, float moved_distance )
 {
-	Vector v_src, v_dest, view_angles;
 	TraceResult tr;
 	float angle = 0.0;
 	bool done = FALSE;
@@ -1413,7 +1408,7 @@ void BotOnLadder( bot_t *pBot, float moved_distance )
 		while ((!done) && (angle < 180.0))
 		{
 			// try looking in one direction (forward + angle)
-			view_angles = pEdict->v.v_angle;
+			Vector view_angles = pEdict->v.v_angle;
 			view_angles.y = pEdict->v.v_angle.y + angle;
 			
 			if (view_angles.y < 0.0)
@@ -1423,8 +1418,8 @@ void BotOnLadder( bot_t *pBot, float moved_distance )
 			
 			MAKE_VECTORS( view_angles );
 			
-			v_src = pEdict->v.origin + pEdict->v.view_ofs;
-			v_dest = v_src + gpGlobals->v_forward * 30;
+			Vector v_src = pEdict->v.origin + pEdict->v.view_ofs;
+			Vector v_dest = v_src + gpGlobals->v_forward * 30;
 			
 			UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 				pEdict->v.pContainingEntity, &tr);
@@ -1563,11 +1558,9 @@ void BotUnderWater( bot_t *pBot )
 		// drowning by swimming up towards the surface and look to see if
 		// there is a surface the bot can jump up onto to get out of the
 		// water.  bots DON'T like water!
-		
-		Vector v_src, v_forward;
+
 		TraceResult tr;
-		int contents;
-		
+
 		// swim up towards the surface
 		pEdict->v.v_angle.x = -60;  // look upwards
 		
@@ -1580,8 +1573,8 @@ void BotUnderWater( bot_t *pBot )
 		// look from eye position straight forward (remember: the bot is looking
 		// upwards at a 60 degree angle so TraceLine will go out and up...
 		
-		v_src = pEdict->v.origin + pEdict->v.view_ofs;  // EyePosition()
-		v_forward = v_src + gpGlobals->v_forward * 90;
+		Vector v_src = pEdict->v.origin + pEdict->v.view_ofs;  // EyePosition()
+		Vector v_forward = v_src + gpGlobals->v_forward * 90;
 		
 		// trace from the bot's eyes straight forward...
 		UTIL_TraceLine( v_src, v_forward, dont_ignore_monsters,
@@ -1591,7 +1584,7 @@ void BotUnderWater( bot_t *pBot )
 		if (tr.flFraction >= 1.0)
 		{
 			// find out what the contents is of the end of the trace...
-			contents = POINT_CONTENTS( tr.vecEndPos );
+			int contents = POINT_CONTENTS(tr.vecEndPos);
 			
 			// check if the trace endpoint is in open space...
 			if (contents == CONTENTS_EMPTY)
@@ -1661,28 +1654,26 @@ void BotUseLift( bot_t *pBot, float moved_distance )
 	if ((moved_distance <= 1) && (pBot->b_lift_moving))
 	{
 		TraceResult tr1, tr2;
-		Vector v_src, v_forward, v_right, v_left;
-		Vector v_down, v_forward_down, v_right_down, v_left_down;
-		
+
 		pBot->b_use_button = FALSE;
 		
 		// TraceLines in 4 directions to find which way to go...
 		
 		MAKE_VECTORS( pEdict->v.v_angle );
+
+		const Vector v_src = pEdict->v.origin + pEdict->v.view_ofs;
+		const Vector v_forward = v_src + gpGlobals->v_forward * 90;
+		const Vector v_right = v_src + gpGlobals->v_right * 90;
+		const Vector v_left = v_src + gpGlobals->v_right * -90;
 		
-		v_src = pEdict->v.origin + pEdict->v.view_ofs;
-		v_forward = v_src + gpGlobals->v_forward * 90;
-		v_right = v_src + gpGlobals->v_right * 90;
-		v_left = v_src + gpGlobals->v_right * -90;
-		
-		v_down = pEdict->v.v_angle;
+		Vector v_down = pEdict->v.v_angle;
 		v_down.x = v_down.x + 45;  // look down at 45 degree angle
 		
 		MAKE_VECTORS( v_down );
-		
-		v_forward_down = v_src + gpGlobals->v_forward * 100;
-		v_right_down = v_src + gpGlobals->v_right * 100;
-		v_left_down = v_src + gpGlobals->v_right * -100;
+
+		const Vector v_forward_down = v_src + gpGlobals->v_forward * 100;
+		const Vector v_right_down = v_src + gpGlobals->v_right * 100;
+		const Vector v_left_down = v_src + gpGlobals->v_right * -100;
 		
 		// try tracing forward first...
 		UTIL_TraceLine( v_src, v_forward, dont_ignore_monsters,
@@ -1737,14 +1728,13 @@ void BotUseLift( bot_t *pBot, float moved_distance )
 bool BotStuckInCorner( bot_t *pBot )
 {
 	TraceResult tr;
-	Vector v_src, v_dest;
 	edict_t *pEdict = pBot->pEdict;
 	
 	MAKE_VECTORS( pEdict->v.v_angle );
 	
 	// trace 45 degrees to the right...
-	v_src = pEdict->v.origin;
-	v_dest = v_src + gpGlobals->v_forward*20 + gpGlobals->v_right*20;
+	Vector v_src = pEdict->v.origin;
+	Vector v_dest = v_src + gpGlobals->v_forward * 20 + gpGlobals->v_right * 20;
 	
 	UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -1769,19 +1759,18 @@ bool BotStuckInCorner( bot_t *pBot )
 void BotTurnAtWall( bot_t *pBot, TraceResult *tr, bool negative )
 {
 	edict_t *pEdict = pBot->pEdict;
-	Vector Normal;
-	float Y, Y1, Y2, D1, D2, Z;
+	float Z;
 	
 	// Find the normal vector from the trace result.  The normal vector will
 	// be a vector that is perpendicular to the surface from the TraceResult.
 	
-	Normal = UTIL_VecToAngles(tr->vecPlaneNormal);
+	Vector Normal = UTIL_VecToAngles(tr->vecPlaneNormal);
 	
 	// Since the bot keeps it's view angle in -180 < x < 180 degrees format,
 	// and since TraceResults are 0 < x < 360, we convert the bot's view
 	// angle (yaw) to the same format at TraceResult.
 	
-	Y = pEdict->v.v_angle.y;
+	float Y = pEdict->v.v_angle.y;
 	Y = Y + 180;
 	if (Y > 359) Y -= 360;
 	
@@ -1804,14 +1793,14 @@ void BotTurnAtWall( bot_t *pBot, TraceResult *tr, bool negative )
 	// least amount of turning (saves time) and have the bot head off in that
 	// direction.
 	
-	Y1 = Normal.y - 90;
+	float Y1 = Normal.y - 90;
 	if (RANDOM_LONG(1, 100) <= 50)
 	{
 		Y1 = Y1 - RANDOM_FLOAT(5.0, 20.0);
 	}
 	if (Y1 < 0) Y1 += 360;
 	
-	Y2 = Normal.y + 90;
+	float Y2 = Normal.y + 90;
 	if (RANDOM_LONG(1, 100) <= 50)
 	{
 		Y2 = Y2 + RANDOM_FLOAT(5.0, 20.0);
@@ -1821,9 +1810,9 @@ void BotTurnAtWall( bot_t *pBot, TraceResult *tr, bool negative )
 	// D1 and D2 are the difference (in degrees) between the bot's current
 	// angle and Y1 or Y2 (respectively).
 	
-	D1 = fabs(Y - Y1);
+	float D1 = fabs(Y - Y1);
 	if (D1 > 179) D1 = fabs(D1 - 360);
-	D2 = fabs(Y - Y2);
+	float D2 = fabs(Y - Y2);
 	if (D2 > 179) D2 = fabs(D2 - 360);
 	
 	// If difference 1 (D1) is more than difference 2 (D2) then the bot will
@@ -1856,15 +1845,13 @@ bool BotCantMoveForward( bot_t *pBot, TraceResult *tr )
 	
 	// use some TraceLines to determine if anything is blocking the current
 	// path of the bot.
-	
-	Vector v_src, v_forward;
-	
+
 	MAKE_VECTORS( pEdict->v.v_angle );
 	
 	// first do a trace from the bot's eyes forward...
 	
-	v_src = pEdict->v.origin + pEdict->v.view_ofs;  // EyePosition()
-	v_forward = v_src + gpGlobals->v_forward * 40;
+	Vector v_src = pEdict->v.origin + pEdict->v.view_ofs;  // EyePosition()
+	Vector v_forward = v_src + gpGlobals->v_forward * 40;
 	
 	// trace from the bot's eyes straight forward...
 	UTIL_TraceLine( v_src, v_forward, dont_ignore_monsters,
@@ -2094,12 +2081,11 @@ bool BotCanDuckUnder( bot_t *pBot )
 	// we can duck under it.
 	
 	TraceResult tr;
-	Vector v_duck, v_source, v_dest;
 	edict_t *pEdict = pBot->pEdict;
 	
 	// convert current view angle to vectors for TraceLine math...
 	
-	v_duck = pEdict->v.v_angle;
+	Vector v_duck = pEdict->v.v_angle;
 	v_duck.x = 0;  // reset pitch to 0 (level horizontally)
 	v_duck.z = 0;  // reset roll to 0 (straight up and down)
 	
@@ -2108,8 +2094,8 @@ bool BotCanDuckUnder( bot_t *pBot )
 	// use center of the body first...
 	
 	// duck height is 36, so check one unit above that (37)
-	v_source = pEdict->v.origin + Vector(0, 0, -36 + 37);
-	v_dest = v_source + gpGlobals->v_forward * 24;
+	Vector v_source = pEdict->v.origin + Vector(0, 0, -36 + 37);
+	Vector v_dest = v_source + gpGlobals->v_forward * 24;
 	
 	// trace a line forward at duck height...
 	UTIL_TraceLine( v_source, v_dest, dont_ignore_monsters,
@@ -2214,8 +2200,6 @@ void BotRandomTurn( bot_t *pBot )
 
 bool BotFollowUser( bot_t *pBot )
 {
-	bool user_visible;
-	float f_distance;
 	edict_t *pEdict = pBot->pEdict;
 	
 	Vector vecEnd = pBot->pBotUser->v.origin + pBot->pBotUser->v.view_ofs;
@@ -2223,12 +2207,12 @@ bool BotFollowUser( bot_t *pBot )
 	if (!IsAlive( pBot->pBotUser ))
 	{
 		// the bot's user is dead!
-		pBot->pBotUser = NULL;
+		pBot->pBotUser = nullptr;
 		return FALSE;
 	}
-	
-	user_visible = FInViewCone( &vecEnd, pEdict ) &&
-		FVisible( vecEnd, pEdict );
+
+	const bool user_visible = FInViewCone(&vecEnd, pEdict) &&
+		FVisible(vecEnd, pEdict);
 	
 	// check if the "user" is still visible or if the user has been visible
 	// in the last 5 seconds (or the player just starting "using" the bot)
@@ -2239,14 +2223,14 @@ bool BotFollowUser( bot_t *pBot )
 			pBot->f_bot_use_time = gpGlobals->time;  // reset "last visible time"
 		
 		// face the user
-		Vector v_user = pBot->pBotUser->v.origin - pEdict->v.origin;
-		Vector bot_angles = UTIL_VecToAngles( v_user );
+		const Vector v_user = pBot->pBotUser->v.origin - pEdict->v.origin;
+		const Vector bot_angles = UTIL_VecToAngles( v_user );
 		
 		pEdict->v.ideal_yaw = bot_angles.y;
 		
 		BotFixIdealYaw(pEdict);
-		
-		f_distance = v_user.Length( );  // how far away is the "user"?
+
+		const float f_distance = v_user.Length();  // how far away is the "user"?
 		
 		if (f_distance > 200)      // run if distance to enemy is far
 			pBot->f_move_speed = pBot->f_max_speed;
@@ -2260,7 +2244,7 @@ bool BotFollowUser( bot_t *pBot )
 	else
 	{
 		// person to follow has gone out of sight...
-		pBot->pBotUser = NULL;
+		pBot->pBotUser = nullptr;
 		
 		return FALSE;
 	}
@@ -2270,15 +2254,14 @@ bool BotFollowUser( bot_t *pBot )
 bool BotCheckWallOnLeft( bot_t *pBot )
 {
 	edict_t *pEdict = pBot->pEdict;
-	Vector v_src, v_left;
 	TraceResult tr;
 	
 	MAKE_VECTORS( pEdict->v.v_angle );
 	
 	// do a trace to the left...
-	
-	v_src = pEdict->v.origin;
-	v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
+
+	const Vector v_src = pEdict->v.origin;
+	const Vector v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
 	
 	UTIL_TraceLine( v_src, v_left, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -2299,15 +2282,14 @@ bool BotCheckWallOnLeft( bot_t *pBot )
 bool BotCheckWallOnRight( bot_t *pBot )
 {
 	edict_t *pEdict = pBot->pEdict;
-	Vector v_src, v_right;
 	TraceResult tr;
 	
 	MAKE_VECTORS( pEdict->v.v_angle );
 	
 	// do a trace to the right...
-	
-	v_src = pEdict->v.origin;
-	v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
+
+	const Vector v_src = pEdict->v.origin;
+	const Vector v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
 	
 	UTIL_TraceLine( v_src, v_right, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -2328,22 +2310,18 @@ bool BotCheckWallOnRight( bot_t *pBot )
 void BotLookForDrop( bot_t *pBot )
 {
 	edict_t *pEdict = pBot->pEdict;
-	
-	Vector v_src, v_dest, v_ahead;
-	float scale, direction;
+
+	float direction;
 	TraceResult tr;
-	int contents;
-	bool need_to_turn, done;
-	int turn_count;
+
+	const float scale = 80 + (pBot->f_max_speed / 10);
 	
-	scale = 80 + (pBot->f_max_speed / 10);
-	
-	v_ahead = pEdict->v.v_angle;
+	Vector v_ahead = pEdict->v.v_angle;
 	v_ahead.x = 0;  // set pitch to level horizontally
 	MAKE_VECTORS(v_ahead);
 	
-	v_src = pEdict->v.origin;
-	v_dest = v_src + gpGlobals->v_forward * scale;
+	Vector v_src = pEdict->v.origin;
+	Vector v_dest = v_src + gpGlobals->v_forward * scale;
 	
 	UTIL_TraceLine( v_src, v_dest, ignore_monsters,
 		pEdict->v.pContainingEntity, &tr );
@@ -2357,7 +2335,7 @@ void BotLookForDrop( bot_t *pBot )
 		UTIL_TraceLine( v_src, v_dest, ignore_monsters,
 			pEdict->v.pContainingEntity, &tr );
 		
-		need_to_turn = FALSE;
+		bool need_to_turn = FALSE;
 		
 		// if trace did not hit anything then drop is TOO FAR...
 		if (tr.flFraction >= 1.0) 
@@ -2367,7 +2345,7 @@ void BotLookForDrop( bot_t *pBot )
 		else
 		{
 			// we've hit something, see if it's water or lava
-			contents = POINT_CONTENTS( tr.vecEndPos );
+			const int contents = POINT_CONTENTS(tr.vecEndPos);
 			
 			if (contents == CONTENTS_LAVA)
 			{
@@ -2386,7 +2364,7 @@ void BotLookForDrop( bot_t *pBot )
 			// if we have an enemy, stop heading towards enemy...
 			if (pBot->pBotEnemy)
 			{
-				pBot->pBotEnemy = NULL;
+				pBot->pBotEnemy = nullptr;
 				pBot->f_bot_find_enemy_time = gpGlobals->time + 1.0;
 			}
 			
@@ -2429,8 +2407,8 @@ void BotLookForDrop( bot_t *pBot )
 				v_ahead = pEdict->v.v_angle;
 				v_ahead.x = 0;  // set pitch to level horizontally
 				
-				done = FALSE;
-				turn_count = 0;
+				bool done = FALSE;
+				int turn_count = 0;
 				
 				while (!done)
 				{

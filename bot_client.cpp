@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot_client.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -176,7 +178,7 @@ void BotClient_FLF_VGUI(void *p, int bot_index)
 {
       static int state = 0;      // current state machine state
 
-      if (p == NULL)  // handle pfnMessageEnd case
+      if (p == nullptr)  // handle pfnMessageEnd case
       {
             state = 0;
             return;
@@ -395,7 +397,6 @@ void BotClient_Valve_AmmoX(void *p, int bot_index)
       static int state = 0;      // current state machine state
       static int index;
       static int ammount;
-      int ammo_index;
 
       if (state == 0)
       {
@@ -410,7 +411,7 @@ void BotClient_Valve_AmmoX(void *p, int bot_index)
 
             bots[bot_index].m_rgAmmo[index] = ammount;  // store it away
 
-            ammo_index = bots[bot_index].current_weapon.iId;
+            const int ammo_index = bots[bot_index].current_weapon.iId;
 
             // update the ammo counts for this weapon...
             bots[bot_index].current_weapon.iAmmo1 =
@@ -459,7 +460,6 @@ void BotClient_Valve_AmmoPickup(void *p, int bot_index)
       static int state = 0;      // current state machine state
       static int index;
       static int ammount;
-      int ammo_index;
 
       if (state == 0)
       {
@@ -474,7 +474,7 @@ void BotClient_Valve_AmmoPickup(void *p, int bot_index)
 
             bots[bot_index].m_rgAmmo[index] = ammount;
 
-            ammo_index = bots[bot_index].current_weapon.iId;
+            const int ammo_index = bots[bot_index].current_weapon.iId;
 
             // update the ammo counts for this weapon...
             bots[bot_index].current_weapon.iAmmo1 =
@@ -729,11 +729,11 @@ void BotClient_Valve_Damage(void *p, int bot_index)
 
                   // if the bot doesn't have an enemy and someone is shooting at it then
                   // turn in the attacker's direction...
-                  if (bots[bot_index].pBotEnemy == NULL)
+                  if (bots[bot_index].pBotEnemy == nullptr)
                   {
                         // face the attacker...
-                        Vector v_enemy = damage_origin - bots[bot_index].pEdict->v.origin;
-                        Vector bot_angles = UTIL_VecToAngles( v_enemy );
+                        const Vector v_enemy = damage_origin - bots[bot_index].pEdict->v.origin;
+                        const Vector bot_angles = UTIL_VecToAngles( v_enemy );
 
                         bots[bot_index].pEdict->v.ideal_yaw = bot_angles.y;
 
@@ -809,7 +809,6 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index)
       char chat_text[81];
       char chat_name[64];
       char temp_name[64];
-      const char *bot_name;
 
       if (state == 0)
       {
@@ -843,27 +842,26 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index)
                         }
                   }
 
-                  if (victim_edict != NULL)
+                  if (victim_edict != nullptr)
                   {
                         // are there any taunt messages and should the bot taunt?
                         if ((bot_taunt_count > 0) &&
                                (RANDOM_LONG(1,100) <= bots[index].taunt_percent))
                         {
                               int taunt_index;
-                              bool used;
-                              int i, recent_count;
+                              int i;
 
                               // set chat flag and time to chat...
                               bots[index].b_bot_say = TRUE;
                               bots[index].f_bot_say = gpGlobals->time + 5.0 + RANDOM_FLOAT(0.0, 5.0);
 
-                              recent_count = 0;
+                              int recent_count = 0;
 
                               while (recent_count < 5)
                               {
                                     taunt_index = RANDOM_LONG(0, bot_taunt_count-1);
 
-                                    used = FALSE;
+                                    bool used = FALSE;
 
                                     for (i=0; i < 5; i++)
                                     {
@@ -897,7 +895,7 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index)
                               else
                                     strcpy(chat_name, "NULL");
 
-                              bot_name = STRING(bots[index].pEdict->v.netname);
+                              const char* bot_name = STRING(bots[index].pEdict->v.netname);
 
                               BotChatFillInName(bots[index].bot_say_msg, chat_text, chat_name, bot_name);
                         }
@@ -913,7 +911,7 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index)
                   if ((killer_index == 0) || (killer_index == victim_index))
                   {
                         // bot killed by world (worldspawn) or bot killed self...
-                        bots[index].killer_edict = NULL;
+                        bots[index].killer_edict = nullptr;
                   }
                   else
                   {
@@ -960,7 +958,7 @@ void BotClient_TFC_TextMsg(void *p, int bot_index)
       static int state = 0;      // current state machine state
       static int msg_dest = 0;
 
-      if (p == NULL)  // handle pfnMessageEnd case
+      if (p == nullptr)  // handle pfnMessageEnd case
       {
             state = 0;
             return;
@@ -981,7 +979,7 @@ void BotClient_TFC_TextMsg(void *p, int bot_index)
             {
                   bots[bot_index].sentrygun_level += 1;
 
-                  bots[bot_index].pBotEnemy = NULL;  // don't attack it anymore
+                  bots[bot_index].pBotEnemy = nullptr;  // don't attack it anymore
                   bots[bot_index].enemy_attack_count = 0;
             }
             else if (strcmp((char *)p, "#Sentry_destroyed") == 0)  // sentry gun destroyed
@@ -1007,7 +1005,7 @@ void BotClient_FLF_TextMsg(void *p, int bot_index)
       static int state = 0;      // current state machine state
       static int msg_dest = 0;
 
-      if (p == NULL)
+      if (p == nullptr)
       {
             state = 0;
             return;
@@ -1064,9 +1062,7 @@ void BotClient_FLF_WinMessage(void *p, int bot_index)
 // This message gets sent when a weapon is hidden or restored
 void BotClient_FLF_HideWeapon(void *p, int bot_index)
 {
-      int hide;
-
-      hide = *(int *)p;
+	const int hide = *(int*)p;
 
       if ((hide == 0) && (bots[bot_index].b_use_capture))
       {
@@ -1085,7 +1081,6 @@ void BotClient_Valve_ScreenFade(void *p, int bot_index)
       static int duration;
       static int hold_time;
       static int fade_flags;
-      int length;
 
       if (state == 0)
       {
@@ -1106,7 +1101,7 @@ void BotClient_Valve_ScreenFade(void *p, int bot_index)
       {
             state = 0;
 
-            length = (duration + hold_time) / 4096;
+            const int length = (duration + hold_time) / 4096;
             bots[bot_index].blinded_time = gpGlobals->time + length - 2.0;
       }
       else
@@ -1142,16 +1137,16 @@ void BotClient_FLF_ScreenFade(void *p, int bot_index)
 
 void BotClient_HolyWars_Halo(void *p, int edict)
 {
-      int type = *(int *)p;
+	const int type = *(int *)p;
 
       if (type == 0)  // wait for halo to respawn
       {
-            holywars_saint = NULL;
+            holywars_saint = nullptr;
             halo_status = HW_WAIT_SPAWN;
       }
       else if (type == 1)  // there's no saint
       {
-            holywars_saint = NULL;
+            holywars_saint = nullptr;
       }
       else if (type == 2)  // there's a new saint
       {
@@ -1166,7 +1161,7 @@ void BotClient_HolyWars_Halo(void *p, int edict)
 
 void BotClient_HolyWars_GameMode(void *p, int bot_index)
 {
-      int mode = *(int *)p;
+	const int mode = *(int *)p;
 
       holywars_gamemode = mode;
 }

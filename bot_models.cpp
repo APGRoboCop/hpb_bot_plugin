@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -73,13 +75,13 @@ HANDLE FindDirectory(HANDLE hFile, char *dirname, char *dirspec)
 
    dirname[0] = 0;
 
-   if (hFile == NULL)
+   if (hFile == nullptr)
    {
       hFile = FindFirstFile(dirspec, &pFindFileData);
 
       if (hFile == INVALID_HANDLE_VALUE)
       {
-         hFile = NULL;
+         hFile = nullptr;
 	 return hFile; // bugfix
       }
 
@@ -88,7 +90,7 @@ HANDLE FindDirectory(HANDLE hFile, char *dirname, char *dirspec)
          if (FindNextFile(hFile, &pFindFileData) == 0)
          {
             FindClose(hFile);
-            hFile = NULL;
+            hFile = nullptr;
             return hFile;
          }
       }
@@ -102,7 +104,7 @@ HANDLE FindDirectory(HANDLE hFile, char *dirname, char *dirspec)
       if (FindNextFile(hFile, &pFindFileData) == 0)
       {
          FindClose(hFile);
-         hFile = NULL;
+         hFile = nullptr;
          return hFile;
       }
 
@@ -111,7 +113,7 @@ HANDLE FindDirectory(HANDLE hFile, char *dirname, char *dirspec)
          if (FindNextFile(hFile, &pFindFileData) == 0)
          {
             FindClose(hFile);
-            hFile = NULL;
+            hFile = nullptr;
             return hFile;
          }
       }
@@ -176,7 +178,7 @@ void LoadBotModels(void)
    int index;
    struct stat stat_str;
 #ifndef __linux__
-   HANDLE directory = NULL;
+   HANDLE directory = nullptr;
 #else
    DIR *directory = NULL;
 #endif
@@ -233,7 +235,7 @@ void LoadBotModels(void)
    strcat(search_path, "/*");
 #endif
 
-   while ((directory = FindDirectory(directory, dirname, search_path)) != NULL)
+   while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
    {
       if ((strcmp(dirname, ".") == 0) || (strcmp(dirname, "..") == 0))
          continue;

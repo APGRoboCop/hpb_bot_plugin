@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot_combat.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -32,7 +34,7 @@ extern int max_teams;
 FILE *fp;
 
 int tfc_max_armor[10] = {0, 50, 50, 200, 120, 100, 300, 150, 100, 50};
-edict_t *holywars_saint = NULL;
+edict_t *holywars_saint = nullptr;
 int halo_status = HW_WAIT_SPAWN;
 int holywars_gamemode = 0;  // 0=deathmatch, 1=halo, 2=instagib
 
@@ -1035,13 +1037,13 @@ bot_fire_delay_t swarm_fire_delay[] = {
 };
 // /SWARM
 
-void BotCheckTeamplay(void)
+void BotCheckTeamplay()
 {
 	float f_team_play = 0.0;
 	
 	// is this TFC or Counter-Strike?
 	if ((mod_id == TFC_DLL) || (mod_id == CSTRIKE_DLL) ||
-		((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL)) ||
+		((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != nullptr)) ||
 		(mod_id == FRONTLINE_DLL) || (mod_id == SWARM_DLL))
 		f_team_play = 1.0;
 	// Wizard Wars 1.2.5 handle DM Ticket #3
@@ -1071,14 +1073,14 @@ void BotCheckTeamplay(void)
 edict_t *BotFindEnemy( bot_t *pBot )
 {
 	static bool flag=TRUE;
-	edict_t *pent = NULL;
+	edict_t *pent = nullptr;
 	edict_t *pNewEnemy;
 	float nearestdistance;
 	int i;
 	
 	edict_t *pEdict = pBot->pEdict;
 	
-	if (pBot->pBotEnemy != NULL)  // does the bot already have an enemy?
+	if (pBot->pBotEnemy != nullptr)  // does the bot already have an enemy?
 	{
 		// if the enemy is dead?
 		if (!IsAlive(pBot->pBotEnemy))  // is the enemy dead?, assume bot killed it
@@ -1092,7 +1094,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 				BotGrenadeThrow(pBot);  // throw the grenade
 			
 			// don't have an enemy anymore so null out the pointer...
-			pBot->pBotEnemy = NULL;
+			pBot->pBotEnemy = nullptr;
 		}
 		else  // enemy is still alive
 		{
@@ -1128,7 +1130,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 				if ((pBot->pBotEnemy->v.health / pBot->pBotEnemy->v.max_health) * 100.0 >
 					pBot->f_heal_percent)
 				{
-					pBot->pBotEnemy = NULL;  // player is healed, null out pointer
+					pBot->pBotEnemy = nullptr;  // player is healed, null out pointer
 				}
 				else
 				{
@@ -1175,8 +1177,8 @@ edict_t *BotFindEnemy( bot_t *pBot )
 		}
 	}
 	
-	pent = NULL;
-	pNewEnemy = NULL;
+	pent = nullptr;
+	pNewEnemy = nullptr;
 	nearestdistance = 1500;
 	
 	pBot->enemy_attack_count = 0;  // don't limit number of attacks
@@ -1232,7 +1234,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 						nearestdistance = distance;
 						pNewEnemy = pPlayer;
 						
-						pBot->pBotUser = NULL;  // don't follow user when enemy found
+						pBot->pBotUser = nullptr;  // don't follow user when enemy found
 					}
 				}
 			}
@@ -1291,15 +1293,15 @@ edict_t *BotFindEnemy( bot_t *pBot )
 							
 							pBot->enemy_attack_count = 3;  // give them 3 whacks
 							
-							pBot->pBotUser = NULL;  // don't follow user when enemy found
+							pBot->pBotUser = nullptr;  // don't follow user when enemy found
 						}
 					}
 				}
 			}
 			
-			if (pNewEnemy == NULL)
+			if (pNewEnemy == nullptr)
 			{
-				while ((pent = UTIL_FindEntityByClassname( pent, "building_sentrygun" )) != NULL)
+				while ((pent = UTIL_FindEntityByClassname( pent, "building_sentrygun" )) != nullptr)
 				{
 					int sentry_team = -1;
 					int bot_team = UTIL_GetTeam(pEdict);
@@ -1354,7 +1356,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 								pBot->f_other_sentry_time = gpGlobals->time + RANDOM_FLOAT(20.0, 30.0);
 							}
 							
-							pBot->pBotUser = NULL;  // don't follow user when enemy found
+							pBot->pBotUser = nullptr;  // don't follow user when enemy found
 						}
 					}
 				}
@@ -1362,9 +1364,9 @@ edict_t *BotFindEnemy( bot_t *pBot )
 		}
 	}
 
-	if (pNewEnemy == NULL)
+	if (pNewEnemy == nullptr)
 	{
-		edict_t *pMonster = NULL;
+		edict_t *pMonster = nullptr;
 		Vector vecEnd;
 		
 		nearestdistance = 9999;
@@ -1409,7 +1411,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 				nearestdistance = distance;
 				pNewEnemy = pMonster;
 				
-				pBot->pBotUser = NULL;  // don't follow user when enemy found
+				pBot->pBotUser = nullptr;  // don't follow user when enemy found
 			}
 		}
 		
@@ -1516,7 +1518,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 					nearestdistance = distance;
 					pNewEnemy = pPlayer;
 					
-					pBot->pBotUser = NULL;  // don't follow user when enemy found
+					pBot->pBotUser = nullptr;  // don't follow user when enemy found
 				}
 			}
 		}
@@ -1581,10 +1583,10 @@ Vector BotBodyTarget(edict_t * pBotEnemy, bot_t * pBot)
 // use (assuming enough ammo exists for that weapon)
 // BotFireWeapon will return TRUE if weapon was fired, FALSE otherwise
 
-bool BotFireWeapon( Vector v_enemy, bot_t *pBot, int weapon_choice)
+bool BotFireWeapon(const Vector v_enemy, bot_t *pBot, int weapon_choice)
 {
-	bot_weapon_select_t *pSelect = NULL;
-	bot_fire_delay_t *pDelay = NULL;
+	bot_weapon_select_t *pSelect = nullptr;
+	bot_fire_delay_t *pDelay = nullptr;
 	int select_index;
 	int iId, weapon_index, value;
 	bool use_primary;
@@ -2052,7 +2054,6 @@ return FALSE;
 
 void BotShootAtEnemy( bot_t *pBot )
 {
-	float f_distance;
 	Vector v_enemy;
 	
 	edict_t *pEdict = pBot->pEdict;
@@ -2070,11 +2071,10 @@ void BotShootAtEnemy( bot_t *pBot )
 		((mod_id == WIZARDWARS_DLL) && (pBot->current_weapon.iId == WEAPON_UPDRAFT))
 	   )
 	{
-		Vector v_src, v_dest;
 		TraceResult tr;
-		
-		v_src = pEdict->v.origin + pEdict->v.view_ofs;  // bot's eyes
-		v_dest = pBot->pBotEnemy->v.origin - pBot->pBotEnemy->v.view_ofs;
+
+		const Vector v_src = pEdict->v.origin + pEdict->v.view_ofs;  // bot's eyes
+		const Vector v_dest = pBot->pBotEnemy->v.origin - pBot->pBotEnemy->v.view_ofs;
 		
 		UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 			pEdict->v.pContainingEntity, &tr);
@@ -2110,23 +2110,21 @@ void BotShootAtEnemy( bot_t *pBot )
 	
 	// adjust the view angle pitch to aim correctly
 	enemy_angle.x = -enemy_angle.x;
-	
-	float d_x, d_y;
-	
-	d_x = (enemy_angle.x - pEdict->v.v_angle.x);
+
+	float d_x = (enemy_angle.x - pEdict->v.v_angle.x);
 	if (d_x > 180.0f)
 		d_x = 360.0f - d_x;
 	if (d_x < -180.0f)
 		d_x = 360.0f + d_x;
 	
-	d_y = (enemy_angle.y - pEdict->v.v_angle.y);
+	float d_y = (enemy_angle.y - pEdict->v.v_angle.y);
 	if (d_y > 180.0f)
 		d_y = 360.0f - d_y;
 	if (d_y < -180.0f)
 		d_y = 360.0f + d_y;
-	
-	float delta_dist_x = fabs(d_x / pBot->f_frame_time);
-	float delta_dist_y = fabs(d_y / pBot->f_frame_time);
+
+	const float delta_dist_x = fabs(d_x / pBot->f_frame_time);
+	const float delta_dist_y = fabs(d_y / pBot->f_frame_time);
 	
 	if ((delta_dist_x > 100.0) && (RANDOM_LONG(1, 100) < 40))
 	{
@@ -2194,7 +2192,7 @@ void BotShootAtEnemy( bot_t *pBot )
 	{
 		if (strcmp(STRING(pBot->pBotEnemy->v.classname), "building_sentrygun") == 0)
 		{
-			float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
+			const float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
 			
 			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50))
 			{
@@ -2203,14 +2201,14 @@ void BotShootAtEnemy( bot_t *pBot )
 				pBot->enemy_attack_count--;
 				
 				if (pBot->enemy_attack_count <= 0)
-					pBot->pBotEnemy = NULL;
+					pBot->pBotEnemy = nullptr;
 			}
 			
 			return;
 		}
 		else if (strcmp(STRING(pBot->pBotEnemy->v.classname), "building_dispenser") == 0)
 		{
-			float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
+			const float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
 			
 			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50.0))
 			{
@@ -2222,14 +2220,14 @@ void BotShootAtEnemy( bot_t *pBot )
 				pBot->enemy_attack_count--;
 				
 				if (pBot->enemy_attack_count <= 0)
-					pBot->pBotEnemy = NULL;
+					pBot->pBotEnemy = nullptr;
 			}
 			
 			return;
 		}
 		else if (pBot->enemy_attack_count > 0)
 		{
-			float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
+			const float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
 			
 			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50))
 			{
@@ -2238,7 +2236,7 @@ void BotShootAtEnemy( bot_t *pBot )
 				pBot->enemy_attack_count--;
 				
 				if (pBot->enemy_attack_count <= 0)
-					pBot->pBotEnemy = NULL;
+					pBot->pBotEnemy = nullptr;
 			}
 			
 			return;
@@ -2255,8 +2253,8 @@ void BotShootAtEnemy( bot_t *pBot )
 	}
 	
 	v_enemy.z = 0;  // ignore z component (up & down)
-	
-	f_distance = v_enemy.Length();  // how far away is the enemy scum?
+
+	const float f_distance = v_enemy.Length();  // how far away is the enemy scum?
 	
 	if (pBot->f_gren_check_time <= gpGlobals->time)
 	{
@@ -2271,9 +2269,9 @@ void BotShootAtEnemy( bot_t *pBot )
 		if (is_team_play)
 		{
 			// check if "enemy" is a teammate...
-			
-			int player_team = UTIL_GetTeam(pBot->pBotEnemy);
-			int bot_team = UTIL_GetTeam(pEdict);
+
+			const int player_team = UTIL_GetTeam(pBot->pBotEnemy);
+			const int bot_team = UTIL_GetTeam(pEdict);
 			
 			if ((bot_team == player_team) ||
 				(team_allies[bot_team] & (1<<player_team)))
@@ -2311,7 +2309,7 @@ void BotShootAtEnemy( bot_t *pBot )
 		// select the best weapon to use at this distance and fire...
 		if (!BotFireWeapon(v_enemy, pBot, 0))
 		{
-			pBot->pBotEnemy = NULL;
+			pBot->pBotEnemy = nullptr;
 			pBot->f_bot_find_enemy_time = gpGlobals->time + 3.0;
 		}
 	}
@@ -2326,8 +2324,8 @@ bool BotShootTripmine( bot_t *pBot )
 		return FALSE;
 	
 	// aim at the tripmine and fire the glock...
-	
-	Vector v_enemy = pBot->v_tripmine - GetGunPosition( pEdict );
+
+	const Vector v_enemy = pBot->v_tripmine - GetGunPosition( pEdict );
 	
 	pEdict->v.v_angle = UTIL_VecToAngles( v_enemy );
 	
@@ -2382,9 +2380,9 @@ bool BotGrenadeArm( bot_t *pBot )
 		pBot->f_gren_throw_time = gpGlobals->time + 1.0 + RANDOM_FLOAT(0.5, 1.0);
 		
 		if (pBot->grenade_type == 0)
-			FakeClientCommand(pEdict, "+gren1", NULL, NULL);
+			FakeClientCommand(pEdict, "+gren1", nullptr, nullptr);
 		else
-			FakeClientCommand(pEdict, "+gren2", NULL, NULL);
+			FakeClientCommand(pEdict, "+gren2", nullptr, nullptr);
 		
 		return TRUE;  // grenade is being primed
 	}
@@ -2397,9 +2395,9 @@ bool BotGrenadeArm( bot_t *pBot )
 			pBot->f_gren_throw_time = gpGlobals->time + 1.0 + RANDOM_FLOAT(0.5, 1.0);
 			
 			if (pBot->grenade_type == 0)
-				FakeClientCommand(pEdict, "+gren1", NULL, NULL);
+				FakeClientCommand(pEdict, "+gren1", nullptr, nullptr);
 			else
-				FakeClientCommand(pEdict, "+gren2", NULL, NULL);
+				FakeClientCommand(pEdict, "+gren2", nullptr, nullptr);
 			
 			return TRUE;  // grenade is being primed
 		}
@@ -2423,9 +2421,9 @@ void BotGrenadeThrow( bot_t *pBot )
 		
 		// throw the grenade...
 		if (pBot->grenade_type == 0)
-			FakeClientCommand(pEdict, "-gren1", NULL, NULL);
+			FakeClientCommand(pEdict, "-gren1", nullptr, nullptr);
 		else
-			FakeClientCommand(pEdict, "-gren2", NULL, NULL);
+			FakeClientCommand(pEdict, "-gren2", nullptr, nullptr);
 	}
 }
 

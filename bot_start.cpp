@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -6,9 +8,9 @@
 // bot_start.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -32,8 +34,6 @@ void BotStartGame( bot_t *pBot )
 	char c_team[32];
 	char c_class[32];
 	char c_item[32];
-	int index, count, retry_count;
-	edict_t *pPlayer;
 	int team;
 	int class_not_allowed;
 	
@@ -65,17 +65,17 @@ void BotStartGame( bot_t *pBot )
 
 			if( (pBot->bot_team != -1) && pBot->bot_team != 5)
 			{	
-				retry_count = 0;
+				int retry_count = 0;
 			
 				while ((retry_count < 4) &&
         	        (max_team_players[pBot->bot_team-1] > 0))  // not unlimited?
 				{
-					count = 0;
+					int count = 0;
 				
 					// count number of players on this team...
-					for (index = 1; index <= gpGlobals->maxClients; index++)
+					for (int index = 1; index <= gpGlobals->maxClients; index++)
 					{
-						pPlayer = INDEXENT(index);
+						edict_t* pPlayer = INDEXENT(index);
 						
 						if (pPlayer && !pPlayer->free)
 						{
@@ -110,7 +110,7 @@ void BotStartGame( bot_t *pBot )
 			else
 				strcpy(c_team, "5");
 			
-			FakeClientCommand(pEdict, "jointeam", c_team, NULL);
+			FakeClientCommand(pEdict, "jointeam", c_team, nullptr);
 			
 			return;
 		}
@@ -192,10 +192,10 @@ void BotStartGame( bot_t *pBot )
 				sprintf(c_class,"%d", pBot->bot_class);
 //				sprintf(c_class,"%d", SWARM_CLASSID_RANDOM);
 //				FakeClientCommand(pEdict, "joinclass", c_class, NULL);
-				FakeClientCommand(pEdict, "changeclass", c_class, NULL);
+				FakeClientCommand(pEdict, "changeclass", c_class, nullptr);
 			}
 			else
-				FakeClientCommand(pEdict, c_class, NULL, NULL);
+				FakeClientCommand(pEdict, c_class, nullptr, nullptr);
 
 			
 			// bot has now joined the game (doesn't need to be started)
@@ -227,7 +227,7 @@ void BotStartGame( bot_t *pBot )
 		   else
 			   strcpy(c_team, "5");
 		   
-		   FakeClientCommand(pEdict, "menuselect", c_team, NULL);
+		   FakeClientCommand(pEdict, "menuselect", c_team, nullptr);
 		   
 		   return;
 	   }
@@ -254,7 +254,7 @@ void BotStartGame( bot_t *pBot )
 		   else
 			   strcpy(c_class, "5");  // random
 		   
-		   FakeClientCommand(pEdict, "menuselect", c_class, NULL);
+		   FakeClientCommand(pEdict, "menuselect", c_class, nullptr);
 		   
 		   // bot has now joined the game (doesn't need to be started)
 		   pBot->not_started = 0;
@@ -284,7 +284,7 @@ void BotStartGame( bot_t *pBot )
 		   else
 			   strcpy(c_class, "5");  // random
 		   
-		   FakeClientCommand(pEdict, "menuselect", c_class, NULL);
+		   FakeClientCommand(pEdict, "menuselect", c_class, nullptr);
 		   
 		   // bot has now joined the game (doesn't need to be started)
 		   pBot->not_started = 0;
@@ -292,7 +292,7 @@ void BotStartGame( bot_t *pBot )
 		   return;
 	   }
    }
-   else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL))
+   else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != nullptr))
    {
 	   // handle Opposing Force CTF stuff here...
 	   
@@ -315,7 +315,7 @@ void BotStartGame( bot_t *pBot )
 		   else
 			   strcpy(c_team, "3");
 		   
-		   FakeClientCommand(pEdict, "jointeam", c_team, NULL);
+		   FakeClientCommand(pEdict, "jointeam", c_team, nullptr);
 		   
 		   return;
 	   }
@@ -346,7 +346,7 @@ void BotStartGame( bot_t *pBot )
 		   else
 			   strcpy(c_class, "7");
 		   
-		   FakeClientCommand(pEdict, "selectchar", c_class, NULL);
+		   FakeClientCommand(pEdict, "selectchar", c_class, nullptr);
 		   
 		   // bot has now joined the game (doesn't need to be started)
 		   pBot->not_started = 0;
@@ -377,7 +377,7 @@ void BotStartGame( bot_t *pBot )
 		   else
 			   strcpy(c_team, "5");
 		   
-		   FakeClientCommand(pEdict, "jointeam", c_team, NULL);
+		   FakeClientCommand(pEdict, "jointeam", c_team, nullptr);
 		   
 		   return;
 	   }
@@ -421,7 +421,7 @@ void BotStartGame( bot_t *pBot )
 				   strcpy(c_class, "commandossupport");
 		   }
 		   
-		   FakeClientCommand(pEdict, c_class, NULL, NULL);
+		   FakeClientCommand(pEdict, c_class, nullptr, nullptr);
 		   
 		   return;
 	   }
@@ -431,8 +431,8 @@ void BotStartGame( bot_t *pBot )
 		   int prim_weapon_group, sec_weapon_group;
 		   
 		   pBot->start_action = MSG_FLF_IDLE;  // switch back to idle
-		   
-		   int flf_class = UTIL_GetClass(pEdict);
+
+		   const int flf_class = UTIL_GetClass(pEdict);
 		   
 		   if (flf_class == 0)  // recon
 		   {
@@ -440,7 +440,7 @@ void BotStartGame( bot_t *pBot )
 			   
 			   if (prim_weapon_group == 1)  // shotguns
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_SPAS12;
@@ -449,7 +449,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else if (prim_weapon_group == 2)  // submachine
 			   {
-				   int weapon = RANDOM_LONG(1, 4);
+				   const int weapon = RANDOM_LONG(1, 4);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_MP5A2;
@@ -462,7 +462,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else  // rifles
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_MSG90;
@@ -484,7 +484,7 @@ void BotStartGame( bot_t *pBot )
 			   
 			   if (sec_weapon_group == 1)  // shotguns
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_SPAS12;
@@ -493,7 +493,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else if (sec_weapon_group == 2)  // submachine
 			   {
-				   int weapon = RANDOM_LONG(1, 4);
+				   const int weapon = RANDOM_LONG(1, 4);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_MP5A2;
@@ -506,7 +506,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else  // rifles
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_MSG90;
@@ -520,7 +520,7 @@ void BotStartGame( bot_t *pBot )
 			   
 			   if (prim_weapon_group == 1)  // shotguns
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_SPAS12;
@@ -529,7 +529,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else if (prim_weapon_group == 2)  // submachine
 			   {
-				   int weapon = RANDOM_LONG(1, 4);
+				   const int weapon = RANDOM_LONG(1, 4);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_MP5A2;
@@ -542,7 +542,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else  // rifles
 			   {
-				   int weapon = RANDOM_LONG(1, 3);
+				   const int weapon = RANDOM_LONG(1, 3);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_M4;
@@ -566,7 +566,7 @@ void BotStartGame( bot_t *pBot )
 			   
 			   if (sec_weapon_group == 1)  // shotguns
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_SPAS12;
@@ -575,7 +575,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else if (sec_weapon_group == 2)  // submachine
 			   {
-				   int weapon = RANDOM_LONG(1, 4);
+				   const int weapon = RANDOM_LONG(1, 4);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_MP5A2;
@@ -588,7 +588,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else  // rifles
 			   {
-				   int weapon = RANDOM_LONG(1, 3);
+				   const int weapon = RANDOM_LONG(1, 3);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_M4;
@@ -604,7 +604,7 @@ void BotStartGame( bot_t *pBot )
 			   
 			   if (prim_weapon_group == 1)  // shotguns
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_SPAS12;
@@ -613,7 +613,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else if (prim_weapon_group == 2)  // submachine
 			   {
-				   int weapon = RANDOM_LONG(1, 4);
+				   const int weapon = RANDOM_LONG(1, 4);
 				   
 				   if (weapon == 1)
 					   pBot->primary_weapon = FLF_WEAPON_MP5A2;
@@ -628,7 +628,7 @@ void BotStartGame( bot_t *pBot )
 			   {
 				   if (RANDOM_LONG(1, 100) <= 50)
 				   {
-					   int weapon = RANDOM_LONG(1, 3);  // rifles
+					   const int weapon = RANDOM_LONG(1, 3);  // rifles
 					   
 					   if (weapon == 1)
 						   pBot->primary_weapon = FLF_WEAPON_M4;
@@ -657,7 +657,7 @@ void BotStartGame( bot_t *pBot )
 			   
 			   if (sec_weapon_group == 1)  // shotguns
 			   {
-				   int weapon = RANDOM_LONG(1, 2);
+				   const int weapon = RANDOM_LONG(1, 2);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_SPAS12;
@@ -666,7 +666,7 @@ void BotStartGame( bot_t *pBot )
 			   }
 			   else if (sec_weapon_group == 2)  // submachine
 			   {
-				   int weapon = RANDOM_LONG(1, 4);
+				   const int weapon = RANDOM_LONG(1, 4);
 				   
 				   if (weapon == 1)
 					   pBot->secondary_weapon = FLF_WEAPON_MP5A2;
@@ -681,7 +681,7 @@ void BotStartGame( bot_t *pBot )
 			   {
 				   if (RANDOM_LONG(1, 100) <= 50)
 				   {
-					   int weapon = RANDOM_LONG(1, 3);  // rifles
+					   const int weapon = RANDOM_LONG(1, 3);  // rifles
 					   
 					   if (weapon == 1)
 						   pBot->secondary_weapon = FLF_WEAPON_M4;
@@ -696,15 +696,15 @@ void BotStartGame( bot_t *pBot )
 				   }
 			   }
 		   }
-		   
-		   int pistol = RANDOM_LONG(1, 2);
+
+		   const int pistol = RANDOM_LONG(1, 2);
 		   
 		   if (pistol == 1)
 			   strcpy(c_item, "26");  // mk23
 		   else
 			   strcpy(c_item, "23");  // beretta
 		   
-		   FakeClientCommand(pEdict, "pistols", c_item, NULL);
+		   FakeClientCommand(pEdict, "pistols", c_item, nullptr);
 		   
 		   return;
       }
@@ -737,7 +737,7 @@ void BotStartGame( bot_t *pBot )
 		  else
 			  strcpy(c_item, "heavyweapons");
 		  
-		  FakeClientCommand(pEdict, "wpnclass", c_item, NULL);
+		  FakeClientCommand(pEdict, "wpnclass", c_item, nullptr);
 		  
 		  return;
       }
@@ -763,7 +763,7 @@ void BotStartGame( bot_t *pBot )
 		  
 		  sprintf(c_item, "%d", weapon_class);
 		  
-		  FakeClientCommand(pEdict, "shotgun", c_item, NULL);
+		  FakeClientCommand(pEdict, "shotgun", c_item, nullptr);
 		  
 		  return;
       }
@@ -789,7 +789,7 @@ void BotStartGame( bot_t *pBot )
 		  
 		  sprintf(c_item, "%d", weapon_class);
 		  
-		  FakeClientCommand(pEdict, "submach", c_item, NULL);
+		  FakeClientCommand(pEdict, "submach", c_item, nullptr);
 		  
 		  return;
       }
@@ -815,7 +815,7 @@ void BotStartGame( bot_t *pBot )
 		  
 		  sprintf(c_item, "%d", weapon_class);
 		  
-		  FakeClientCommand(pEdict, "rifles", c_item, NULL);
+		  FakeClientCommand(pEdict, "rifles", c_item, nullptr);
 		  
 		  return;
       }
@@ -841,14 +841,14 @@ void BotStartGame( bot_t *pBot )
 		  
 		  sprintf(c_item, "%d", weapon_class);
 		  
-		  FakeClientCommand(pEdict, "heavyweapons", c_item, NULL);
+		  FakeClientCommand(pEdict, "heavyweapons", c_item, nullptr);
 		  
 		  return;
       }
    }
    else if (mod_id == DMC_DLL)
    {
-	   FakeClientCommand(pEdict, "_firstspawn", NULL, NULL);
+	   FakeClientCommand(pEdict, "_firstspawn", nullptr, nullptr);
 	   
 	   pBot->not_started = 0;
    }

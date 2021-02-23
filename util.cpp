@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /***
 *
 *  Copyright (c) 1999, Valve LLC. All rights reserved.
@@ -21,9 +23,9 @@
 // util.cpp
 //
 
-//#ifndef _WIN32
-//#include <string.h>
-//#endif
+#ifndef _WIN32
+#include <cstring>
+#endif
 
 #include <extdll.h>
 #include <dllapi.h>
@@ -64,26 +66,22 @@ void UTIL_TraceLine( const Vector &vecStart, const Vector &vecEnd, IGNORE_MONSTE
 
 edict_t *UTIL_FindEntityInSphere( edict_t *pentStart, const Vector &vecCenter, float flRadius )
 {
-	edict_t  *pentEntity;
-
-	pentEntity = FIND_ENTITY_IN_SPHERE( pentStart, vecCenter, flRadius);
+	edict_t* pentEntity = FIND_ENTITY_IN_SPHERE(pentStart, vecCenter, flRadius);
 
 	if (!FNullEnt(pentEntity))
 		return pentEntity;
 
-	return NULL;
+	return nullptr;
 }
 
 
 edict_t *UTIL_FindEntityByString( edict_t *pentStart, const char *szKeyword, const char *szValue )
 {
-	edict_t *pentEntity;
-
-	pentEntity = FIND_ENTITY_BY_STRING( pentStart, szKeyword, szValue );
+	edict_t* pentEntity = FIND_ENTITY_BY_STRING(pentStart, szKeyword, szValue);
 
 	if (!FNullEnt(pentEntity))
 		return pentEntity;
-	return NULL;
+	return nullptr;
 }
 
 
@@ -106,10 +104,10 @@ edict_t *UTIL_FindEntityByTargetname( edict_t *pentStart, const char *szName )
 
 void ClientPrint( edict_t *pEntity, int msg_dest, const char *msg_name)
 {
-	if (GET_USER_MSG_ID (PLID, "TextMsg", NULL) <= 0)
+	if (GET_USER_MSG_ID (PLID, "TextMsg", nullptr) <= 0)
 		REG_USER_MSG ("TextMsg", -1);
 
-	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "TextMsg", NULL), NULL, pEntity );
+	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "TextMsg", nullptr), nullptr, pEntity );
 
 	WRITE_BYTE( msg_dest );
 	WRITE_STRING( msg_name );
@@ -118,10 +116,10 @@ void ClientPrint( edict_t *pEntity, int msg_dest, const char *msg_name)
 
 void UTIL_SayText( const char *pText, edict_t *pEdict )
 {
-	if (GET_USER_MSG_ID (PLID, "SayText", NULL) <= 0)
+	if (GET_USER_MSG_ID (PLID, "SayText", nullptr) <= 0)
 		REG_USER_MSG ("SayText", -1);
 
-	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "SayText", NULL), NULL, pEdict );
+	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "SayText", nullptr), nullptr, pEdict );
 		WRITE_BYTE( ENTINDEX(pEdict) );
 		if (mod_id == FRONTLINE_DLL)
 			WRITE_SHORT(0);
@@ -132,23 +130,20 @@ void UTIL_SayText( const char *pText, edict_t *pEdict )
 
 void UTIL_HostSay( edict_t *pEntity, int teamonly, char *message )
 {
-	int	j;
 	char  text[128];
 	char *pc;
-	int	sender_team, player_team;
-	edict_t *client;
 
 	// make sure the text has content
-	for ( pc = message; pc != NULL && *pc != 0; pc++ )
+	for ( pc = message; pc != nullptr && *pc != 0; pc++ )
 	{
 		if ( isprint( *pc ) && !isspace( *pc ) )
 		{
-			pc = NULL;	// we've found an alphanumeric character,  so text is valid
+			pc = nullptr;	// we've found an alphanumeric character,  so text is valid
 			break;
 		}
 	}
 
-	if ( pc != NULL )
+	if ( pc != nullptr )
 		return;  // no character found, so say nothing
 
 	// turn on color set 2  (color on,  no sound)
@@ -157,7 +152,7 @@ void UTIL_HostSay( edict_t *pEntity, int teamonly, char *message )
 	else
 		sprintf( text, "%c%s: ", 2, STRING( pEntity->v.netname ) );
 
-	j = sizeof(text) - 2 - strlen(text);  // -2 for /n and null terminator
+	const int j = sizeof(text) - 2 - strlen(text);  // -2 for /n and null terminator
 	if ( (int)strlen(message) > j )
 		message[j] = 0;
 
@@ -169,24 +164,24 @@ void UTIL_HostSay( edict_t *pEntity, int teamonly, char *message )
 	// This may return the world in single player if the client types something between levels or during spawn
 	// so check it, or it will infinite loop
 
-	if (GET_USER_MSG_ID (PLID, "SayText", NULL) <= 0)
+	if (GET_USER_MSG_ID (PLID, "SayText", nullptr) <= 0)
 		REG_USER_MSG ("SayText", -1);
 
-	sender_team = UTIL_GetTeam(pEntity);
+	const int sender_team = UTIL_GetTeam(pEntity);
 
-	client = NULL;
-	while ( ((client = UTIL_FindEntityByClassname( client, "player" )) != NULL) &&
+	edict_t* client = nullptr;
+	while ( ((client = UTIL_FindEntityByClassname( client, "player" )) != nullptr) &&
 			  (!FNullEnt(client)) )
 	{
 		if ( client == pEntity )  // skip sender of message
 			continue;
 
-		player_team = UTIL_GetTeam(client);
+		const int player_team = UTIL_GetTeam(client);
 
 		if ( teamonly && (sender_team != player_team) )
 			continue;
 
-		MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "SayText", NULL), NULL, client );
+		MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "SayText", nullptr), nullptr, client );
 			WRITE_BYTE( ENTINDEX(pEntity) );
 			if (mod_id == FRONTLINE_DLL)
 				WRITE_SHORT(0);
@@ -195,7 +190,7 @@ void UTIL_HostSay( edict_t *pEntity, int teamonly, char *message )
 	}
 
 	// print to the sending client
-	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "SayText", NULL), NULL, pEntity );
+	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "SayText", nullptr), nullptr, pEntity );
 		WRITE_BYTE( ENTINDEX(pEntity) );
 		if (mod_id == FRONTLINE_DLL)
 			WRITE_SHORT(0);
@@ -231,10 +226,9 @@ int UTIL_GetTeam(edict_t *pEntity)
 	}
 	else if (mod_id == CSTRIKE_DLL)
 	{
-		char *infobuffer;
 		char model_name[32];
 
-		infobuffer = GET_INFOKEYBUFFER( pEntity );
+		char* infobuffer = GET_INFOKEYBUFFER(pEntity);
 		strcpy(model_name, INFOKEY_VALUE (infobuffer, "model"));
 
 		if ((strcmp(model_name, "terror") == 0) ||  // Phoenix Connektion
@@ -256,14 +250,13 @@ int UTIL_GetTeam(edict_t *pEntity)
 
 		return 0;  // return zero if team is unknown
 	}
-	else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL))
+	else if ((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != nullptr))
 	{
 		// OpFor CTF map...
 
-		char *infobuffer;
 		char model_name[32];
 
-		infobuffer = GET_INFOKEYBUFFER( pEntity );
+		char* infobuffer = GET_INFOKEYBUFFER(pEntity);
 		strcpy(model_name, INFOKEY_VALUE (infobuffer, "model"));
 
 		if ((strcmp(model_name, "ctf_barney") == 0) ||
@@ -293,21 +286,19 @@ int UTIL_GetTeam(edict_t *pEntity)
 	}
 	else  // must be HL or OpFor deathmatch...
 	{
-		char *infobuffer;
 		char model_name[32];
 
 		if (team_names[0][0] == 0)
 		{
-			char *pName;
 			char teamlist[MAX_TEAMS*MAX_TEAMNAME_LENGTH];
 			int i;
 
 			num_teams = 0;
 			strcpy(teamlist, CVAR_GET_STRING("mp_teamlist"));
-			pName = teamlist;
+			char* pName = teamlist;
 			pName = strtok(pName, ";");
 
-			while (pName != NULL && *pName)
+			while (pName != nullptr && *pName)
 			{
 				// check that team isn't defined twice
 				for (i=0; i < num_teams; i++)
@@ -318,11 +309,11 @@ int UTIL_GetTeam(edict_t *pEntity)
 					strcpy(team_names[num_teams], pName);
 					num_teams++;
 				}
-				pName = strtok(NULL, ";");
+				pName = strtok(nullptr, ";");
 			}
 		}
 
-		infobuffer = GET_INFOKEYBUFFER( pEntity );
+		char* infobuffer = GET_INFOKEYBUFFER(pEntity);
 		strcpy(model_name, INFOKEY_VALUE (infobuffer, "model"));
 
 		for (int index=0; index < num_teams; index++)
@@ -339,10 +330,9 @@ int UTIL_GetTeam(edict_t *pEntity)
 // return class number 0 through N
 int UTIL_GetClass(edict_t *pEntity)
 {
-	char *infobuffer;
 	char model_name[32];
 
-	infobuffer = GET_INFOKEYBUFFER( pEntity );
+	char* infobuffer = GET_INFOKEYBUFFER(pEntity);
 	strcpy(model_name, INFOKEY_VALUE (infobuffer, "model"));
 
 	if (mod_id == FRONTLINE_DLL)
@@ -370,9 +360,7 @@ int UTIL_GetClass(edict_t *pEntity)
 
 int UTIL_GetBotIndex(edict_t *pEdict)
 {
-	int index;
-
-	for (index=0; index < 32; index++)
+	for (int index = 0; index < 32; index++)
 	{
 		if (bots[index].pEdict == pEdict)
 		{
@@ -399,7 +387,7 @@ bot_t *UTIL_GetBotPointer(edict_t *pEdict)
 	if (index < 32)
 		return (&bots[index]);
 
-	return NULL;  // return NULL if edict is not a bot
+	return nullptr;  // return NULL if edict is not a bot
 }
 
 
@@ -414,15 +402,12 @@ bool IsAlive(edict_t *pEdict)
 
 bool FInViewCone(Vector *pOrigin, edict_t *pEdict)
 {
-	Vector2D vec2LOS;
-	float	 flDot;
-
 	MAKE_VECTORS ( pEdict->v.angles );
 
-	vec2LOS = ( *pOrigin - pEdict->v.origin ).Make2D();
+	Vector2D vec2LOS = (*pOrigin - pEdict->v.origin).Make2D();
 	vec2LOS = vec2LOS.Normalize();
 
-	flDot = DotProduct (vec2LOS , gpGlobals->v_forward.Make2D() );
+	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
 	if ( flDot > 0.50 )  // 60 degree field of view
 	{
@@ -438,13 +423,12 @@ bool FInViewCone(Vector *pOrigin, edict_t *pEdict)
 bool FVisible( const Vector &vecOrigin, edict_t *pEdict )
 {
 	TraceResult tr;
-	Vector		vecLookerOrigin;
 
 	// look through caller's eyes
-	vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
+	Vector vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
 
-	int bInWater = (POINT_CONTENTS (vecOrigin) == CONTENTS_WATER);
-	int bLookerInWater = (POINT_CONTENTS (vecLookerOrigin) == CONTENTS_WATER);
+	const int bInWater = (POINT_CONTENTS (vecOrigin) == CONTENTS_WATER);
+	const int bLookerInWater = (POINT_CONTENTS (vecLookerOrigin) == CONTENTS_WATER);
 
 	// don't look through water
 	if (bInWater != bLookerInWater)
@@ -475,7 +459,7 @@ Vector GetGunPosition(edict_t *pEdict)
 
 void UTIL_SelectItem(edict_t *pEdict, char *item_name)
 {
-	FakeClientCommand(pEdict, item_name, NULL, NULL);
+	FakeClientCommand(pEdict, item_name, nullptr, nullptr);
 }
 
 
@@ -509,11 +493,9 @@ Vector VecBModelOrigin(edict_t *pEdict)
 
 bool UpdateSounds(edict_t *pEdict, edict_t *pPlayer)
 {
-	float distance;
 	static bool check_footstep_sounds = TRUE;
 	static float footstep_sounds_on;
-	float sensitivity = 1.0;
-	float volume;
+	const float sensitivity = 1.0;
 
 	// update sounds made by this player, alert bots if they are nearby...
 
@@ -528,16 +510,16 @@ bool UpdateSounds(edict_t *pEdict, edict_t *pPlayer)
 		// check if this player is moving fast enough to make sounds...
 		if (pPlayer->v.velocity.Length2D() > 220.0)
 		{
-			volume = 500.0;  // volume of sound being made (just pick something)
+			const float volume = 500.0;  // volume of sound being made (just pick something)
 
-			Vector v_sound = pPlayer->v.origin - pEdict->v.origin;
+			const Vector v_sound = pPlayer->v.origin - pEdict->v.origin;
 
-			distance = v_sound.Length();
+			const float distance = v_sound.Length();
 
 			// is the bot close enough to hear this sound?
 			if (distance < (volume * sensitivity))
 			{
-				Vector bot_angles = UTIL_VecToAngles( v_sound );
+				const Vector bot_angles = UTIL_VecToAngles( v_sound );
 
 				pEdict->v.ideal_yaw = bot_angles.y;
 
@@ -554,10 +536,10 @@ bool UpdateSounds(edict_t *pEdict, edict_t *pPlayer)
 
 void UTIL_ShowMenu( edict_t *pEdict, int slots, int displaytime, bool needmore, char *pText )
 {
-	if (GET_USER_MSG_ID (PLID, "ShowMenu", NULL) <= 0)
+	if (GET_USER_MSG_ID (PLID, "ShowMenu", nullptr) <= 0)
 		REG_USER_MSG ("ShowMenu", -1);
 
-	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "ShowMenu", NULL), NULL, pEdict );
+	MESSAGE_BEGIN( MSG_ONE, GET_USER_MSG_ID (PLID, "ShowMenu", nullptr), nullptr, pEdict );
 
 	WRITE_SHORT( slots );
 	WRITE_CHAR( displaytime );
@@ -600,7 +582,7 @@ void UTIL_BuildFileName(char *filename, char *arg1, char *arg2)
 		return;
 	}
 */
-	if ((arg1 != NULL) && (arg2 != NULL))
+	if ((arg1 != nullptr) && (arg2 != nullptr))
 	{
 		if (*arg1 && *arg2)
 		{
@@ -612,7 +594,7 @@ void UTIL_BuildFileName(char *filename, char *arg1, char *arg2)
 		return;
 	}
 
-	if (arg1 != NULL)
+	if (arg1 != nullptr)
 	{
 		if (*arg1)
 		{
@@ -645,19 +627,17 @@ void GetGameDir (char *game_dir)
 	// macro, which returns either an absolute directory path, or a relative one, depending on
 	// whether the game server is run standalone or not. This one always return a RELATIVE path.
 
-	unsigned char length, fieldstart, fieldstop;
-
 	GET_GAME_DIR (game_dir); // call the engine macro and let it mallocate for the char pointer
 
-	length = strlen (game_dir); // get the length of the returned string
+	unsigned char length = strlen(game_dir); // get the length of the returned string
 	length--; // ignore the trailing string terminator
 
 	// format the returned string to get the last directory name
-	fieldstop = length;
+	unsigned char fieldstop = length;
 	while (((game_dir[fieldstop] == '\\') || (game_dir[fieldstop] == '/')) && (fieldstop > 0))
 		fieldstop--; // shift back any trailing separator
 
-	fieldstart = fieldstop;
+	unsigned char fieldstart = fieldstop;
 	while ((game_dir[fieldstart] != '\\') && (game_dir[fieldstart] != '/') && (fieldstart > 0))
 		fieldstart--; // shift back to the start of the last subdirectory name
 
