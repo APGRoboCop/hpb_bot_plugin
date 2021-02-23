@@ -2,8 +2,8 @@ TARGET = hpb_bot_mm
 ARCHFLAG = march=i686
 BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp
 
-OPTFLAGS = -mtune=generic -msse -msse2 -O2 -m32 -mfpmath=sse -Wno-write-strings \
-		-falign-loops=2 -falign-jumps=2 -falign-functions=2 \
+OPTFLAGS = -mtune=generic -mmmx -msse -msse2 -O2 -m32 -mfpmath=sse -pipe -s \
+		-Wno-write-strings -falign-loops=2 -falign-jumps=2 -falign-functions=2 \
 
 SDKTOP = ../metamod-p-37
 CPPFLAGS = ${BASEFLAGS} ${OPTFLAGS} -${ARCHFLAG} -w -I$(SDKTOP)/metamod -I$(SDKTOP)/hlsdk/common -I$(SDKTOP)/hlsdk/dlls -I$(SDKTOP)/hlsdk/engine -I$(SDKTOP)/hlsdk/pm_shared

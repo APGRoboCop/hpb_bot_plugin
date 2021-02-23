@@ -2262,7 +2262,7 @@ void BotShootAtEnemy( bot_t *pBot )
 	{
 		pBot->f_gren_check_time = gpGlobals->time + pBot->grenade_time;
 		
-		bool teammate = 0;
+		bool teammate = false;
 		
 		if (!checked_teamplay)  // check for team play...
 			BotCheckTeamplay();

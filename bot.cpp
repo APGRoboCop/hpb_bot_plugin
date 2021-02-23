@@ -593,8 +593,8 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		{
 			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "rate", "3500.000000");
 			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "cl_updaterate", "20");
-			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "cl_lw", "1");
-			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "cl_lc", "1");
+			//SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "cl_lw", "1"); // jeefo
+			//SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "cl_lc", "1");
 			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "tracker", "0");
 			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "cl_dlmax", "128");
 			SET_CLIENT_KEYVALUE( clientIndex, infobuffer, "lefthand", "1");
