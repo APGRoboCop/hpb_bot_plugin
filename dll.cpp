@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // HPB bot - botman's High Ping Bastard bot
 //
@@ -1858,8 +1856,8 @@ void ProcessBotCfgFile()
 		// have to delay here or engine gives "Tried to write to
 		// uninitialized sizebuf_t" error and crashes...
 
-		bot_cfg_pause_time = gpGlobals->time + 2.0;
-		bot_check_time = gpGlobals->time + 5.0;
+		bot_cfg_pause_time = gpGlobals->time + 2.0f;
+		bot_check_time = gpGlobals->time + 5.0f;
 
 		return;
 	}
