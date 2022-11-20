@@ -166,7 +166,7 @@ DIR *FindDirectory(DIR *directory, char *dirname, char *dirspec)
 #endif
 
 
-void LoadBotModels(void)
+void LoadBotModels()
 {
    char game_dir[256];
    char path[MAX_PATH];

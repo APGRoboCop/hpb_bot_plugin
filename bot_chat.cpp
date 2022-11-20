@@ -46,7 +46,7 @@ extern int bot_chat_swap_percent;
 extern int bot_chat_lower_percent;
 
 
-void LoadBotChat(void)
+void LoadBotChat()
 {
 	char filename[256];
 	char buffer[256];
@@ -390,7 +390,7 @@ void BotChatText(char *in_text, char *out_text)
 }
 
 
-void BotChatGetPlayers(void)
+void BotChatGetPlayers()
 {
 	player_count = 0;
 

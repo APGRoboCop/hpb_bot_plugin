@@ -61,7 +61,7 @@ unsigned short *from_to[4] = {nullptr, nullptr, nullptr, nullptr};
 static FILE *fp;
 
 
-void WaypointDebug(void)
+void WaypointDebug()
 {
    int y = 1, x = 1;
 
@@ -77,7 +77,7 @@ void WaypointDebug(void)
 
 
 // free the linked list of waypoint path nodes...
-void WaypointFree(void)
+void WaypointFree()
 {
    for (int i=0; i < MAX_WAYPOINTS; i++)
    {
@@ -106,7 +106,7 @@ void WaypointFree(void)
 
 
 // initialize the waypoint structures...
-void WaypointInit(void)
+void WaypointInit()
 {
    int i;
 
@@ -336,7 +336,7 @@ int WaypointFindNearest(edict_t *pEntity, float range, int team)
    // find the nearest waypoint...
 
    int min_index = -1;
-   float min_distance = 9999.0;
+   float min_distance = 9999.0f;
 
    for (int i = 0; i < num_waypoints; i++)
    {
@@ -359,7 +359,7 @@ int WaypointFindNearest(edict_t *pEntity, float range, int team)
          UTIL_TraceLine( pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin,
                          ignore_monsters, pEntity->v.pContainingEntity, &tr );
 
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
          {
             min_index = i;
             min_distance = distance;
@@ -1371,7 +1371,7 @@ bool WaypointLoad(edict_t *pEntity)
 }
 
 
-void WaypointSave(void)
+void WaypointSave()
 {
    char filename[256];
    char mapname[64];
@@ -1862,7 +1862,7 @@ void WaypointFloyds(unsigned short *shortest_path, unsigned short *from_to)
 }
 
 
-void WaypointRouteInit(void)
+void WaypointRouteInit()
 {
    unsigned int index;
    bool build_matrix[4];
@@ -1937,12 +1937,12 @@ void WaypointRouteInit(void)
                sprintf(msg, "loading HPB bot waypoint paths for team %d\n", matrix+1);
                ALERT(at_console, msg);
 
-               shortest_path[matrix] = (unsigned short *)malloc(sizeof(unsigned short) * array_size);
+               shortest_path[matrix] = static_cast<unsigned short*>(malloc(sizeof(unsigned short) * array_size));
 
                if (shortest_path[matrix] == nullptr)
                   ALERT(at_error, "HPB_bot - Error allocating memory for shortest path!");
 
-               from_to[matrix] = (unsigned short *)malloc(sizeof(unsigned short) * array_size);
+               from_to[matrix] = static_cast<unsigned short*>(malloc(sizeof(unsigned short) * array_size));
 
                if (from_to[matrix] == nullptr)
                   ALERT(at_error, "HPB_bot - Error allocating memory for from to matrix!");

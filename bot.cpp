@@ -64,8 +64,8 @@ extern skin_t bot_skins[MAX_SKINS];
 static FILE *fp;
 
 
-#define PLAYER_SEARCH_RADIUS	  40.0
-#define FLF_PLAYER_SEARCH_RADIUS 60.0
+#define PLAYER_SEARCH_RADIUS	  40.0f
+#define FLF_PLAYER_SEARCH_RADIUS 60.0f
 
 
 #define MAX_BOT_NAMES 100
@@ -86,17 +86,17 @@ bool b_botdontshoot = FALSE;
 float pause_frequency[5] = {4, 7, 10, 15, 20};
 
 float pause_time[5][2] = {
-	{0.2, 0.5}, {0.5, 1.0}, {0.7, 1.3}, {1.0, 1.7}, {1.2, 2.0}};
+	{0.2f, 0.5f}, {0.5f, 1.0f}, {0.7f, 1.3f}, {1.0f, 1.7f}, {1.2f, 2.0f}};
 
 
 
 void BotSpawnInit( bot_t *pBot )
 {
-	pBot->v_prev_origin = Vector(9999.0, 9999.0, 9999.0);
+	pBot->v_prev_origin = Vector(9999.0f, 9999.0f, 9999.0f);
 	pBot->f_speed_check_time = gpGlobals->time;
 
 	pBot->waypoint_origin = Vector(0, 0, 0);
-	pBot->f_waypoint_time = 0.0;
+	pBot->f_waypoint_time = 0.0f;
 	pBot->curr_waypoint_index = -1;
 	pBot->prev_waypoint_index[0] = -1;
 	pBot->prev_waypoint_index[1] = -1;
@@ -106,10 +106,10 @@ void BotSpawnInit( bot_t *pBot )
 
 	pBot->f_random_waypoint_time = gpGlobals->time;
 	pBot->waypoint_goal = -1;
-	pBot->f_waypoint_goal_time = 0.0;
+	pBot->f_waypoint_goal_time = 0.0f;
 	pBot->waypoint_near_flag = FALSE;
 	pBot->waypoint_flag_origin = Vector(0, 0, 0);
-	pBot->prev_waypoint_distance = 0.0;
+	pBot->prev_waypoint_distance = 0.0f;
 
 	pBot->weapon_points[0] = 0;
 	pBot->weapon_points[1] = 0;
@@ -118,26 +118,26 @@ void BotSpawnInit( bot_t *pBot )
 	pBot->weapon_points[4] = 0;
 	pBot->weapon_points[5] = 0;
 
-	pBot->blinded_time = 0.0;
+	pBot->blinded_time = 0.0f;
 
 	pBot->f_max_speed = CVAR_GET_FLOAT("sv_maxspeed");
 
-	pBot->f_prev_speed = 0.0;  // fake "paused" since bot is NOT stuck
+	pBot->f_prev_speed = 0.0f;  // fake "paused" since bot is NOT stuck
 
-	pBot->f_find_item = 0.0;
+	pBot->f_find_item = 0.0f;
 
 	pBot->ladder_dir = LADDER_UNKNOWN;
-	pBot->f_start_use_ladder_time = 0.0;
-	pBot->f_end_use_ladder_time = 0.0;
+	pBot->f_start_use_ladder_time = 0.0f;
+	pBot->f_end_use_ladder_time = 0.0f;
 	pBot->waypoint_top_of_ladder = FALSE;
 
-	pBot->f_wall_check_time = 0.0;
-	pBot->f_wall_on_right = 0.0;
-	pBot->f_wall_on_left = 0.0;
-	pBot->f_dont_avoid_wall_time = 0.0;
-	pBot->f_look_for_waypoint_time = 0.0;
-	pBot->f_jump_time = 0.0;
-	pBot->f_drop_check_time = 0.0;
+	pBot->f_wall_check_time = 0.0f;
+	pBot->f_wall_on_right = 0.0f;
+	pBot->f_wall_on_left = 0.0f;
+	pBot->f_dont_avoid_wall_time = 0.0f;
+	pBot->f_look_for_waypoint_time = 0.0f;
+	pBot->f_jump_time = 0.0f;
+	pBot->f_drop_check_time = 0.0f;
 
 	// pick a wander direction (50% of the time to the left, 50% to the right)
 	if (RANDOM_LONG(1, 100) <= 50)
@@ -145,43 +145,43 @@ void BotSpawnInit( bot_t *pBot )
 	else
 		pBot->wander_dir = WANDER_RIGHT;
 
-	pBot->f_exit_water_time = 0.0;
+	pBot->f_exit_water_time = 0.0f;
 
 	pBot->pBotEnemy = nullptr;
 	pBot->f_bot_see_enemy_time = gpGlobals->time;
 	pBot->f_bot_find_enemy_time = gpGlobals->time;
-	pBot->f_aim_tracking_time = 0.0;
-	pBot->f_aim_x_angle_delta = 0.0;
-	pBot->f_aim_y_angle_delta = 0.0;
+	pBot->f_aim_tracking_time = 0.0f;
+	pBot->f_aim_x_angle_delta = 0.0f;
+	pBot->f_aim_y_angle_delta = 0.0f;
 
 	pBot->pBotUser = nullptr;
-	pBot->f_bot_use_time = 0.0;
+	pBot->f_bot_use_time = 0.0f;
 	pBot->b_bot_say = FALSE;
-	pBot->f_bot_say = 0.0;
+	pBot->f_bot_say = 0.0f;
 	pBot->bot_say_msg[0] = 0;
 	pBot->f_bot_chat_time = gpGlobals->time;
 	pBot->enemy_attack_count = 0;
-	pBot->f_duck_time = 0.0;
+	pBot->f_duck_time = 0.0f;
 
-	pBot->f_sniper_aim_time = 0.0;
+	pBot->f_sniper_aim_time = 0.0f;
 
 	pBot->f_shoot_time = gpGlobals->time;
-	pBot->f_primary_charging = -1.0;
-	pBot->f_secondary_charging = -1.0;
+	pBot->f_primary_charging = -1.0f;
+	pBot->f_secondary_charging = -1.0f;
 	pBot->charging_weapon_id = 0;
 	pBot->f_gren_throw_time = -1.0;
 	pBot->f_gren_check_time = 0.0;
 	pBot->b_grenade_primed = FALSE;
 	pBot->grenade_type = 0;
-	pBot->f_grenade_search_time = 0.0;
-	pBot->f_grenade_found_time = 0.0;
+	pBot->f_grenade_search_time = 0.0f;
+	pBot->f_grenade_found_time = 0.0f;
 
-	pBot->f_medic_check_time = 0.0;
-	pBot->f_medic_pause_time = 0.0;
-	pBot->f_medic_yell_time = 0.0;
+	pBot->f_medic_check_time = 0.0f;
+	pBot->f_medic_pause_time = 0.0f;
+	pBot->f_medic_yell_time = 0.0f;
 
-	pBot->f_pause_time = 0.0;
-	pBot->f_sound_update_time = 0.0;
+	pBot->f_pause_time = 0.0f;
+	pBot->f_sound_update_time = 0.0f;
 	pBot->bot_has_flag = FALSE;
 
 	pBot->b_see_tripmine = FALSE;
@@ -189,29 +189,29 @@ void BotSpawnInit( bot_t *pBot )
 	pBot->v_tripmine = Vector(0,0,0);
 
 	pBot->b_use_health_station = FALSE;
-	pBot->f_use_health_time = 0.0;
+	pBot->f_use_health_time = 0.0f;
 	pBot->b_use_HEV_station = FALSE;
-	pBot->f_use_HEV_time = 0.0;
+	pBot->f_use_HEV_time = 0.0f;
 
 	pBot->b_use_button = FALSE;
-	pBot->f_use_button_time = 0;
+	pBot->f_use_button_time = 0.0f;
 	pBot->b_lift_moving = FALSE;
 
 	pBot->b_use_capture = FALSE;
-	pBot->f_use_capture_time = 0.0;
+	pBot->f_use_capture_time = 0.0f;
 	pBot->pCaptureEdict = nullptr;
 
 	pBot->b_spray_logo = FALSE;
 
-	pBot->f_engineer_build_time = 0.0;
+	pBot->f_engineer_build_time = 0.0f;
 	pBot->b_build_sentrygun = FALSE;
 	pBot->b_build_dispenser = FALSE;
-	pBot->f_other_sentry_time = 0.0;
+	pBot->f_other_sentry_time = 0.0f;
 	pBot->b_upgrade_sentry = FALSE;
 
-	pBot->f_medic_check_health_time = 0.0;
+	pBot->f_medic_check_health_time = 0.0f;
 
-	pBot->f_reaction_target_time = 0.0;
+	pBot->f_reaction_target_time = 0.0f;
 
 	memset(&(pBot->current_weapon), 0, sizeof(pBot->current_weapon));
 	memset(&(pBot->m_rgAmmo), 0, sizeof(pBot->m_rgAmmo));
@@ -729,7 +729,7 @@ int BotInFieldOfView(bot_t *pBot, const Vector dest)
 	// 45 degrees to the right is the limit of the normal view angle
 
 	// rsm - START angle bug fix
-	int angle = abs((int)view_angle - (int)entity_angles.y);
+	int angle = std::abs(static_cast<int>(view_angle) - static_cast<int>(entity_angles.y));
 
 	if (angle > 180)
 		angle = 360 - angle;
@@ -749,7 +749,7 @@ bool BotEntityIsVisible( bot_t *pBot, const Vector dest )
 						 pBot->pEdict->v.pContainingEntity, &tr );
 
 	// check if line of sight to object is not blocked (i.e. visible)
-	if (tr.flFraction >= 1.0)
+	if (tr.flFraction >= 1.0f)
 		return TRUE;
 	else
 		return FALSE;
@@ -909,7 +909,7 @@ void BotSprayLogo(edict_t *pEntity, char *logo_name)
 	if (index < 0)
 		return;
 
-	if ((pTrace.pHit) && (pTrace.flFraction < 1.0))
+	if ((pTrace.pHit) && (pTrace.flFraction < 1.0f))
 	{
 		if (pTrace.pHit->v.solid != SOLID_BSP)
 			return;
@@ -953,11 +953,11 @@ void BotFindItem( bot_t *pBot )
 
 	// use a MUCH smaller search radius when waypoints are available
 	if ((num_waypoints > 0) && (pBot->curr_waypoint_index != -1))
-		radius = 100.0;
+		radius = 100.0f;
 	else
-		radius = 500.0;
+		radius = 500.0f;
 
-	float min_distance = radius + 1.0;
+	float min_distance = radius + 1.0f;
 
 	while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, radius )) != nullptr)
 	{
@@ -997,7 +997,7 @@ void BotFindItem( bot_t *pBot )
 									 pEdict->v.pContainingEntity, &tr);
 
 				// check if traced all the way up to the entity (didn't hit wall)
-				if (tr.flFraction >= 1.0)
+				if (tr.flFraction >= 1.0f)
 				{
 					// find distance to item for later use...
 					const float distance = (vecEnd - vecStart).Length( );
@@ -1005,13 +1005,13 @@ void BotFindItem( bot_t *pBot )
 					// use the ladder about 100% of the time, if haven't
 					// used a ladder in at least 5 seconds...
 					if ((RANDOM_LONG(1, 100) <= 100) &&
-						 ((pBot->f_end_use_ladder_time + 5.0) < gpGlobals->time))
+						 ((pBot->f_end_use_ladder_time + 5.0f) < gpGlobals->time))
 					{
 						// if close to ladder...
 						if (distance < 100)
 						{
 							// don't avoid walls for a while
-							pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+							pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 						}
 
 						can_pickup = TRUE;
@@ -1052,7 +1052,7 @@ void BotFindItem( bot_t *pBot )
 								if (distance < 100)
 								{
 									// don't avoid walls for a while
-									pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+									pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 								}
 
 								can_pickup = TRUE;
@@ -1088,7 +1088,7 @@ void BotFindItem( bot_t *pBot )
 								if (distance < 100)
 								{
 									// don't avoid walls for a while
-									pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+									pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 								}
 
 								can_pickup = TRUE;
@@ -1125,7 +1125,7 @@ void BotFindItem( bot_t *pBot )
 								if (distance < 100)
 								{
 									// don't avoid walls for a while
-									pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+									pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 								}
 
 								can_pickup = TRUE;
@@ -1277,7 +1277,7 @@ void BotFindItem( bot_t *pBot )
 							 (angle_to_entity <= 20))
 						{
 							pBot->b_use_capture = TRUE;
-							pBot->f_use_capture_time = gpGlobals->time + 3.0;
+							pBot->f_use_capture_time = gpGlobals->time + 3.0f;
 							pBot->pCaptureEdict = pent;
 						}
 
@@ -1285,7 +1285,7 @@ void BotFindItem( bot_t *pBot )
 						if (distance < 160)
 						{
 							// don't avoid walls for a while
-							pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+							pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 						}
 
 						can_pickup = TRUE;
@@ -1398,7 +1398,7 @@ bool BotLookForMedic( bot_t *pBot )
 bool BotLookForGrenades( bot_t *pBot )
 {
 	Vector entity_origin;
-	const float radius = 500;
+	const float radius = 500.0f;
 	char classname[40];
 	edict_t *pEdict = pBot->pEdict;
 
@@ -1502,9 +1502,9 @@ void BotThink( bot_t *pBot )
 	// adjust the millisecond delay based on the frame rate interval...
 	if (pBot->msecdel <= gpGlobals->time)
 	{
-		pBot->msecdel = gpGlobals->time + 0.5;
+		pBot->msecdel = gpGlobals->time + 0.5f;
 		if (pBot->msecnum > 0)
-			pBot->msecval = 450.0/pBot->msecnum;
+			pBot->msecval = 450.0f/pBot->msecnum;
 		pBot->msecnum = 0;
 	}
 	else
@@ -1522,7 +1522,7 @@ void BotThink( bot_t *pBot )
 
 	
 	pEdict->v.button = 0;
-	pBot->f_move_speed = 0.0;
+	pBot->f_move_speed = 0.0f;
 
 	// 1.2.7 #22 Bot gets locked in Observer mode sometimes
 	if ((mod_id == WIZARDWARS_DLL) && !pBot->not_started && pBot->pEdict->v.iuser1)
@@ -1563,7 +1563,7 @@ void BotThink( bot_t *pBot )
 			// did another player kill this bot AND bot whine messages loaded AND
 			// has the bot been alive for at least 15 seconds AND
 			if ((pBot->killer_edict != nullptr) && (bot_whine_count > 0) &&
-				 ((pBot->f_bot_spawn_time + 15.0) <= gpGlobals->time))
+				 ((pBot->f_bot_spawn_time + 15.0f) <= gpGlobals->time))
 			{
 				int whine_index;
 				bool used;
@@ -1573,7 +1573,7 @@ void BotThink( bot_t *pBot )
 				{
 					// set chat flag and time to chat...
 					pBot->b_bot_say = TRUE;
-					pBot->f_bot_say = gpGlobals->time + 5.0 + RANDOM_FLOAT(0.0, 5.0);
+					pBot->f_bot_say = gpGlobals->time + 5.0f + RANDOM_FLOAT(0.0f, 5.0f);
 
 					recent_count = 0;
 
@@ -1633,7 +1633,7 @@ void BotThink( bot_t *pBot )
 
 	if ((bot_chat_count > 0) && (pBot->f_bot_chat_time < gpGlobals->time))
 	{
-		pBot->f_bot_chat_time = gpGlobals->time + 30.0;
+		pBot->f_bot_chat_time = gpGlobals->time + 30.0f;
 
 		if (RANDOM_LONG(1,100) <= pBot->chat_percent)
 		{
@@ -1643,7 +1643,7 @@ void BotThink( bot_t *pBot )
 
 			// set chat flag and time to chat...
 			pBot->b_bot_say = TRUE;
-			pBot->f_bot_say = gpGlobals->time + 5.0 + RANDOM_FLOAT(0.0, 5.0);
+			pBot->f_bot_say = gpGlobals->time + 5.0f + RANDOM_FLOAT(0.0f, 5.0f);
 
 			recent_count = 0;
 
@@ -1767,9 +1767,9 @@ void BotThink( bot_t *pBot )
 	{
 		if (pBot->idle_angle_time <= gpGlobals->time)
 		{
-			pBot->idle_angle_time = gpGlobals->time + RANDOM_FLOAT(0.5, 2.0);
+			pBot->idle_angle_time = gpGlobals->time + RANDOM_FLOAT(0.5f, 2.0f);
 
-			pEdict->v.ideal_yaw = pBot->idle_angle + RANDOM_FLOAT(0.0, 60.0) - 30.0;
+			pEdict->v.ideal_yaw = pBot->idle_angle + RANDOM_FLOAT(0.0f, 60.0f) - 30.0f;
 
 			BotFixIdealYaw(pEdict);
 		}
@@ -1794,7 +1794,7 @@ void BotThink( bot_t *pBot )
 		int ind;
 		edict_t *pPlayer;
 
-		pBot->f_sound_update_time = gpGlobals->time + 1.0;
+		pBot->f_sound_update_time = gpGlobals->time + 1.0f;
 
 		for (ind = 1; ind <= gpGlobals->maxClients; ind++)
 		{
@@ -1814,7 +1814,7 @@ void BotThink( bot_t *pBot )
 					if (UpdateSounds(pEdict, pPlayer))
 					{
 						// don't check for sounds for another 30 seconds
-						pBot->f_sound_update_time = gpGlobals->time + 30.0;
+						pBot->f_sound_update_time = gpGlobals->time + 30.0f;
 					}
 				}
 			}
@@ -1831,11 +1831,11 @@ void BotThink( bot_t *pBot )
 
 		// save current position as previous
 		pBot->v_prev_origin = pEdict->v.origin;
-		pBot->f_speed_check_time = gpGlobals->time + 0.2;
+		pBot->f_speed_check_time = gpGlobals->time + 0.2f;
 	}
 	else
 	{
-		moved_distance = 2.0;
+		moved_distance = 2.0f;
 	}
 
 	// if the bot is not underwater AND not in the air (or on ladder),
@@ -1845,7 +1845,7 @@ void BotThink( bot_t *pBot )
 		 (pEdict->v.movetype != MOVETYPE_FLY) &&
 		 (pBot->f_drop_check_time < gpGlobals->time))
 	{
-		pBot->f_drop_check_time = gpGlobals->time + 0.05;
+		pBot->f_drop_check_time = gpGlobals->time + 0.05f;
 
 		BotLookForDrop( pBot );
 	}
@@ -1858,7 +1858,7 @@ void BotThink( bot_t *pBot )
 
 	if ((pitch_degrees >= 45) || (yaw_degrees >= 45))
 	{
-		pBot->f_move_speed = 0.0;  // don't move while turning a lot
+		pBot->f_move_speed = 0.0f;  // don't move while turning a lot
 	}
 	else if ((pitch_degrees >= 30) || (yaw_degrees >= 30))
 	{
@@ -1879,7 +1879,7 @@ void BotThink( bot_t *pBot )
 				// is it time to check whether bot should look for enemies yet?
 				if (pBot->f_bot_find_enemy_time <= gpGlobals->time)
 				{
-					pBot->f_bot_find_enemy_time = gpGlobals->time + 5.0;
+					pBot->f_bot_find_enemy_time = gpGlobals->time + 5.0f;
 
 					if (RANDOM_LONG(1, 100) <= 40)
 						pBot->pBotEnemy = BotFindEnemy( pBot );
@@ -1920,7 +1920,7 @@ void BotThink( bot_t *pBot )
 
 				// took too long trying to spray logo?...
 			if ((pBot->b_spray_logo) &&
-				 ((pBot->f_spray_logo_time + 3.0) < gpGlobals->time))
+				 ((pBot->f_spray_logo_time + 3.0f) < gpGlobals->time))
 			{
 				pBot->b_spray_logo = FALSE;
 				pEdict->v.idealpitch = 0.0f;
@@ -1944,10 +1944,10 @@ void BotThink( bot_t *pBot )
 				UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 									 pEdict->v.pContainingEntity, &tr);
 
-				if (tr.flFraction < 1.0)
+				if (tr.flFraction < 1.0f)
 				{
 					// already facing the correct yaw, just set pitch...
-					pEdict->v.idealpitch = RANDOM_FLOAT(0.0, 30.0) - 15.0;
+					pEdict->v.idealpitch = RANDOM_FLOAT(0.0f, 30.0f) - 15.0f;
 				}
 				else
 				{
@@ -1956,7 +1956,7 @@ void BotThink( bot_t *pBot )
 					UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 										 pEdict->v.pContainingEntity, &tr);
 
-					if (tr.flFraction < 1.0)
+					if (tr.flFraction < 1.0f)
 					{
 						// set the ideal yaw and pitch...
 						Vector bot_angles = UTIL_VecToAngles(v_dest - v_src);
@@ -1965,7 +1965,7 @@ void BotThink( bot_t *pBot )
 
 						BotFixIdealYaw(pEdict);
 
-						pEdict->v.idealpitch = RANDOM_FLOAT(0.0, 30.0) - 15.0;
+						pEdict->v.idealpitch = RANDOM_FLOAT(0.0f, 30.0f) - 15.0f;
 					}
 					else
 					{
@@ -1983,7 +1983,7 @@ void BotThink( bot_t *pBot )
 
 							BotFixIdealYaw(pEdict);
 
-							pEdict->v.idealpitch = RANDOM_FLOAT(0.0, 30.0) - 15.0;
+							pEdict->v.idealpitch = RANDOM_FLOAT(0.0f, 30.0f) - 15.0f;
 						}
 						else
 						{
@@ -2001,7 +2001,7 @@ void BotThink( bot_t *pBot )
 
 								BotFixIdealYaw(pEdict);
 
-								pEdict->v.idealpitch = RANDOM_FLOAT(0.0, 30.0) - 15.0;
+								pEdict->v.idealpitch = RANDOM_FLOAT(0.0f, 30.0f) - 15.0f;
 							}
 							else
 							{
@@ -2018,7 +2018,7 @@ void BotThink( bot_t *pBot )
 								UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 													 pEdict->v.pContainingEntity, &tr);
 
-								if (tr.flFraction < 1.0)
+								if (tr.flFraction < 1.0f)
 								{
 									// set the pitch...
 
@@ -2031,7 +2031,7 @@ void BotThink( bot_t *pBot )
 					}
 				}
 
-				pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+				pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 
 				// is there a wall close to us?
 
@@ -2043,7 +2043,7 @@ void BotThink( bot_t *pBot )
 				UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 									 pEdict->v.pContainingEntity, &tr);
 
-				if (tr.flFraction < 1.0)
+				if (tr.flFraction < 1.0f)
 				{
 					BotSprayLogo(pEdict, pBot->logo_name);
 
@@ -2065,7 +2065,7 @@ void BotThink( bot_t *pBot )
 			// check if bot should look for items now or not...
 			if (pBot->f_find_item <= gpGlobals->time)
 			{
-				pBot->f_find_item = gpGlobals->time + 0.1;
+				pBot->f_find_item = gpGlobals->time + 0.1f;
 
 				BotFindItem( pBot );  // see if there are any visible items
 			}
@@ -2084,7 +2084,7 @@ void BotThink( bot_t *pBot )
 					pBot->b_see_tripmine = FALSE;
 
 					// pause for a while to allow tripmine to explode...
-					pBot->f_pause_time = gpGlobals->time + 0.5;
+					pBot->f_pause_time = gpGlobals->time + 0.5f;
 				}
 				else  // run away!!!
 				{
@@ -2099,16 +2099,16 @@ void BotThink( bot_t *pBot )
 
 					pBot->b_see_tripmine = FALSE;
 
-					pBot->f_move_speed = 0;  // don't run while turning
+					pBot->f_move_speed = 0.0f;  // don't run while turning
 				}
 			}
 
 			// check if should use wall mounted health station...
 			else if (pBot->b_use_health_station)
 			{
-				if ((pBot->f_use_health_time + 10.0) > gpGlobals->time)
+				if ((pBot->f_use_health_time + 10.0f) > gpGlobals->time)
 				{
-					pBot->f_move_speed = 0;  // don't move while using health station
+					pBot->f_move_speed = 0.0f;  // don't move while using health station
 
 					pEdict->v.button = IN_USE;
 				}
@@ -2120,14 +2120,14 @@ void BotThink( bot_t *pBot )
 
 					// don't look for items for a while since the bot
 					// could be stuck trying to get to an item
-					pBot->f_find_item = gpGlobals->time + 0.5;
+					pBot->f_find_item = gpGlobals->time + 0.5f;
 				}
 			}
 
 			// check if should use wall mounted HEV station...
 			else if (pBot->b_use_HEV_station)
 			{
-				if ((pBot->f_use_HEV_time + 10.0) > gpGlobals->time)
+				if ((pBot->f_use_HEV_time + 10.0f) > gpGlobals->time)
 				{
 					pBot->f_move_speed = 0;  // don't move while using HEV station
 
@@ -2141,7 +2141,7 @@ void BotThink( bot_t *pBot )
 
 					// don't look for items for a while since the bot
 					// could be stuck trying to get to an item
-					pBot->f_find_item = gpGlobals->time + 0.5;
+					pBot->f_find_item = gpGlobals->time + 0.5f;
 				}
 			}
 
@@ -2163,11 +2163,11 @@ void BotThink( bot_t *pBot )
 					// bot is stuck trying to "use" a capture point...
 
 					pBot->b_use_capture = FALSE;
-					pBot->f_use_capture_time = 0.0;
+					pBot->f_use_capture_time = 0.0f;
 
 					// don't look for items for a while since the bot
 					// could be stuck trying to get to an item
-					pBot->f_find_item = gpGlobals->time + 0.5;
+					pBot->f_find_item = gpGlobals->time + 0.5f;
 				}
 			}
 
@@ -2175,10 +2175,10 @@ void BotThink( bot_t *pBot )
 			{
 				if (pBot->sentrygun_level == 0)
 				{
-					pBot->f_move_speed = 0;  // don't move while building
+					pBot->f_move_speed = 0.0f;  // don't move while building
 
 					// check if the bot is facing the correct direction yet...
-					if (yaw_degrees <= 1.0)
+					if (yaw_degrees <= 1.0f)
 					{
 						FakeClientCommand(pEdict, "build", "2", nullptr);
 
@@ -2194,14 +2194,14 @@ void BotThink( bot_t *pBot )
 
 					pBot->b_build_sentrygun = FALSE;
 
-					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0 )) != nullptr)
+					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0f )) != nullptr)
 					{
 						if (strcmp(STRING(pent->v.classname), "building_sentrygun") == 0)
 						{
 							pBot->pBotEnemy = pent;
 
 							pBot->enemy_attack_count = 3;  // give it 3 whacks
-							pBot->f_engineer_build_time = gpGlobals->time + 20.0;
+							pBot->f_engineer_build_time = gpGlobals->time + 20.0f;
 
 							// face the enemy
 							Vector v_enemy = pent->v.origin - pEdict->v.origin;
@@ -2221,17 +2221,17 @@ void BotThink( bot_t *pBot )
 			{
 				if (pBot->dispenser_built == 0)
 				{
-					pBot->f_move_speed = 0;  // don't move while building
+					pBot->f_move_speed = 0.0f;  // don't move while building
 
 					// check if the bot is facing the correct direction yet...
-					if (yaw_degrees <= 1.0)
+					if (yaw_degrees <= 1.0f)
 					{
 						FakeClientCommand(pEdict, "build", "1", nullptr);
 
 						pBot->b_build_dispenser = FALSE;
 
-						pBot->f_engineer_build_time = gpGlobals->time + 20.0;
-						pBot->f_pause_time = gpGlobals->time + 3.0;
+						pBot->f_engineer_build_time = gpGlobals->time + 20.0f;
+						pBot->f_pause_time = gpGlobals->time + 3.0f;
 					}
 				}
 				else  // need to "attack" this dispenser to refill it...
@@ -2240,14 +2240,14 @@ void BotThink( bot_t *pBot )
 
 					pBot->b_build_dispenser = FALSE;
 
-					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0 )) != nullptr)
+					while ((pent = UTIL_FindEntityInSphere( pent, pEdict->v.origin, 150.0f )) != nullptr)
 					{
 						if (strcmp(STRING(pent->v.classname), "building_dispenser") == 0)
 						{
 							pBot->pBotEnemy = pent;
 
 							pBot->enemy_attack_count = 3;  // give it 3 whacks
-							pBot->f_engineer_build_time = gpGlobals->time + 20.0;
+							pBot->f_engineer_build_time = gpGlobals->time + 20.0f;
 
 							// face the enemy
 							Vector v_enemy = pent->v.origin - pEdict->v.origin;
@@ -2265,12 +2265,12 @@ void BotThink( bot_t *pBot )
 
 			else if (pBot->b_use_button)
 			{
-				pBot->f_move_speed = 0;  // don't move while using elevator
+				pBot->f_move_speed = 0.0f;  // don't move while using elevator
 
 				BotUseLift( pBot, moved_distance );
 			}
 			// Shields up!
-			else if (pEdict->v.armorvalue <= (pEdict->v.armortype - 30.0))
+			else if (pEdict->v.armorvalue <= (pEdict->v.armortype - 30.0f))
 			{
 				Vector v_enemy = pEdict->v.origin + gpGlobals->v_forward * 1;
 
@@ -2300,19 +2300,19 @@ void BotThink( bot_t *pBot )
 				if (pEdict->v.movetype == MOVETYPE_FLY)
 				{
 					// check if bot JUST got on the ladder...
-					if ((pBot->f_end_use_ladder_time + 1.0) < gpGlobals->time)
+					if ((pBot->f_end_use_ladder_time + 1.0f) < gpGlobals->time)
 						pBot->f_start_use_ladder_time = gpGlobals->time;
 
 					// go handle the ladder movement
 					BotOnLadder( pBot, moved_distance );
 
-					pBot->f_dont_avoid_wall_time = gpGlobals->time + 2.0;
+					pBot->f_dont_avoid_wall_time = gpGlobals->time + 2.0f;
 					pBot->f_end_use_ladder_time = gpGlobals->time;
 				}
 				else
 				{
 					// check if the bot JUST got off the ladder...
-					if ((pBot->f_end_use_ladder_time + 1.0) > gpGlobals->time)
+					if ((pBot->f_end_use_ladder_time + 1.0f) > gpGlobals->time)
 					{
 						pBot->ladder_dir = LADDER_UNKNOWN;
 					}
@@ -2333,10 +2333,10 @@ void BotThink( bot_t *pBot )
 
 							BotFixIdealYaw(pEdict);
 
-							pBot->f_move_speed = 0;  // don't move while turning
-							pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0;
+							pBot->f_move_speed = 0.0f;  // don't move while turning
+							pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0f;
 
-							moved_distance = 2.0;  // dont use bot stuck code
+							moved_distance = 2.0f;  // dont use bot stuck code
 						}
 						else
 						{
@@ -2347,37 +2347,37 @@ void BotThink( bot_t *pBot )
 								// 20% of the time randomly turn between 45 and 60 degrees
 
 								if ((pBot->f_wall_on_left != 0) &&
-									 (pBot->f_wall_on_left <= gpGlobals->time - 0.5) &&
+									 (pBot->f_wall_on_left <= gpGlobals->time - 0.5f) &&
 									 (RANDOM_LONG(1, 100) <= 20))
 								{
 									pEdict->v.ideal_yaw += RANDOM_LONG(45, 60);
 
 									BotFixIdealYaw(pEdict);
 
-									pBot->f_move_speed = 0;  // don't move while turning
-									pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0;
+									pBot->f_move_speed = 0.0f;  // don't move while turning
+									pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0f;
 								}
 
-								pBot->f_wall_on_left = 0;  // reset wall detect time
+								pBot->f_wall_on_left = 0.0f;  // reset wall detect time
 							}
 							else if (!BotCheckWallOnRight( pBot ))
 							{
 								// if there was a wall on the right over 1/2 a second ago then
 								// 20% of the time randomly turn between 45 and 60 degrees
 
-								if ((pBot->f_wall_on_right != 0) &&
-									 (pBot->f_wall_on_right <= gpGlobals->time - 0.5) &&
-									 (RANDOM_LONG(1, 100) <= 20))
+								if ((pBot->f_wall_on_right != 0.0f) &&
+									 (pBot->f_wall_on_right <= gpGlobals->time - 0.5f) &&
+									 (RANDOM_LONG(1, 100) <= 20.0f))
 								{
 									pEdict->v.ideal_yaw -= RANDOM_LONG(45, 60);
 
 									BotFixIdealYaw(pEdict);
 
-									pBot->f_move_speed = 0;  // don't move while turning
-									pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0;
+									pBot->f_move_speed = 0.0f;  // don't move while turning
+									pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0f;
 								}
 
-								pBot->f_wall_on_right = 0;  // reset wall detect time
+								pBot->f_wall_on_right = 0.0f;  // reset wall detect time
 							}
 						}
 					}
@@ -2397,32 +2397,32 @@ void BotThink( bot_t *pBot )
 				// check if bot is on a ladder and has been on a ladder for
 				// more than 5 seconds...
 				if ((pEdict->v.movetype == MOVETYPE_FLY) &&
-					 (pBot->f_start_use_ladder_time > 0.0) &&
-					 ((pBot->f_start_use_ladder_time + 5.0) <= gpGlobals->time))
+					 (pBot->f_start_use_ladder_time > 0.0f) &&
+					 ((pBot->f_start_use_ladder_time + 5.0f) <= gpGlobals->time))
 				{
 					// bot is stuck on a ladder...
 
 					BotRandomTurn(pBot);
 
 					// don't look for items for 2 seconds
-					pBot->f_find_item = gpGlobals->time + 2.0;
+					pBot->f_find_item = gpGlobals->time + 2.0f;
 
-					pBot->f_start_use_ladder_time = 0.0;  // reset start ladder time
+					pBot->f_start_use_ladder_time = 0.0f;  // reset start ladder time
 				}
 
 				// check if the bot hasn't moved much since the last location
 				// (and NOT on a ladder since ladder stuck handled elsewhere)
-				if ((moved_distance <= 1.0) && (pBot->f_prev_speed >= 1.0) &&
+				if ((moved_distance <= 1.0f) && (pBot->f_prev_speed >= 1.0f) &&
 					 (pEdict->v.movetype != MOVETYPE_FLY))
 				{
 					// the bot must be stuck!
 
-					pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0;
-					pBot->f_look_for_waypoint_time = gpGlobals->time + 1.0;
+					pBot->f_dont_avoid_wall_time = gpGlobals->time + 1.0f;
+					pBot->f_look_for_waypoint_time = gpGlobals->time + 1.0f;
 
 					if (BotCanJumpUp( pBot, &bCrouchJump ))  // can the bot jump onto something?
 					{
-						if ((pBot->f_jump_time + 2.0) <= gpGlobals->time)
+						if ((pBot->f_jump_time + 2.0f) <= gpGlobals->time)
 						{
 							pBot->f_jump_time = gpGlobals->time;
 							pEdict->v.button |= IN_JUMP;  // jump up and move forward
@@ -2449,7 +2449,7 @@ void BotThink( bot_t *pBot )
 						{
 							// don't look for items for a while since the bot
 							// could be stuck trying to get to an item
-							pBot->f_find_item = gpGlobals->time + 0.5;
+							pBot->f_find_item = gpGlobals->time + 0.5f;
 						}
 					}
 				}
@@ -2490,10 +2490,10 @@ void BotThink( bot_t *pBot )
 				{
 					float waypoint_distance = (pEdict->v.origin - pBot->waypoint_origin).Length();
 
-					if (waypoint_distance <= 20.0)  // if VERY close...
-						pBot->f_move_speed = 20.0;  // go VERY slow
-					else if (waypoint_distance <= 100.0)  // if fairly close...
-						pBot->f_move_speed = 50.0;  // go fairly slow
+					if (waypoint_distance <= 20.0f)  // if VERY close...
+						pBot->f_move_speed = 20.0f;  // go VERY slow
+					else if (waypoint_distance <= 100.0f)  // if fairly close...
+						pBot->f_move_speed = 50.0f;  // go fairly slow
 
 					pBot->ladder_dir = LADDER_DOWN;
 				}
@@ -2505,7 +2505,7 @@ void BotThink( bot_t *pBot )
 			else
 			{
 				// don't avoid walls for a while
-				pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0;
+				pBot->f_dont_avoid_wall_time = gpGlobals->time + 5.0f;
 
 				pBot->waypoint_top_of_ladder = FALSE;
 			}
@@ -2543,7 +2543,7 @@ void BotThink( bot_t *pBot )
 					// go slow to prevent the "loop the loop" problem...
 					pBot->f_move_speed = pBot->f_max_speed / 3;
 
-					pBot->f_sniper_aim_time = 0.0;  // reset aiming time
+					pBot->f_sniper_aim_time = 0.0f;  // reset aiming time
 
 					pEdict->v.v_angle.z = 0;  // reset roll to 0 (straight up and down)
 
@@ -2555,7 +2555,7 @@ void BotThink( bot_t *pBot )
 					// save the previous speed (for checking if stuck)
 					pBot->f_prev_speed = pBot->f_move_speed;
 
-					f_strafe_speed = 0.0;
+					f_strafe_speed = 0.0f;
 
 					g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
 														  f_strafe_speed, 0, pEdict->v.button, 0, pBot->msecval);
@@ -2584,7 +2584,7 @@ void BotThink( bot_t *pBot )
 					}
 
 					// don't adjust aim again until after a few seconds...
-					pBot->f_sniper_aim_time = gpGlobals->time + RANDOM_FLOAT(3.0, 5.0);
+					pBot->f_sniper_aim_time = gpGlobals->time + RANDOM_FLOAT(3.0f, 5.0f);
 				}
 			}
 		}
@@ -2615,17 +2615,17 @@ void BotThink( bot_t *pBot )
 
 	if (pBot->f_strafe_time < gpGlobals->time)  // time to strafe yet?
 	{
-		pBot->f_strafe_time = gpGlobals->time + RANDOM_FLOAT(0.1, 1.0);
+		pBot->f_strafe_time = gpGlobals->time + RANDOM_FLOAT(0.1f, 1.0f);
 
 		if (RANDOM_LONG(1, 100) <= pBot->strafe_percent)
 		{
 			if (RANDOM_LONG(1, 100) <= 50)
-				pBot->f_strafe_direction = -1 * RANDOM_FLOAT(0.5, 1.0);
+				pBot->f_strafe_direction = -1 * RANDOM_FLOAT(0.5f, 1.0f);
 			else
-				pBot->f_strafe_direction = RANDOM_FLOAT(0.5, 1.0);
+				pBot->f_strafe_direction = RANDOM_FLOAT(0.5f, 1.0f);
 		}
 		else
-			pBot->f_strafe_direction = 0.0;
+			pBot->f_strafe_direction = 0.0f;
 	}
 
 	if (pBot->f_duck_time > gpGlobals->time)
@@ -2640,25 +2640,25 @@ void BotThink( bot_t *pBot )
 	{
 		if (pBot->f_medic_check_time <= gpGlobals->time)
 		{
-			pBot->f_medic_check_time = gpGlobals->time + 0.1;
+			pBot->f_medic_check_time = gpGlobals->time + 0.1f;
 
 			// is bot's health less than 50% AND bot can see a medic?
-			if (((pEdict->v.health / pEdict->v.max_health) < 0.50) &&
+			if (((pEdict->v.health / pEdict->v.max_health) < 0.50f) &&
 				 BotLookForMedic( pBot ))
 			{
 				if (RANDOM_LONG(1, 100) <= 50)
 				{
 					// yell "saveme" and stand still for 3.0 seconds
 					FakeClientCommand(pEdict, "saveme", nullptr, nullptr);
-					pBot->f_medic_pause_time = gpGlobals->time + 3.0;
+					pBot->f_medic_pause_time = gpGlobals->time + 3.0f;
 				}
 
-				pBot->f_medic_check_time = gpGlobals->time + 3.0;
+				pBot->f_medic_check_time = gpGlobals->time + 3.0f
 			}
 			else
 			{
 				// is the bot's health less than 20%?
-				if ((pEdict->v.health / pEdict->v.max_health) < 0.20)
+				if ((pEdict->v.health / pEdict->v.max_health) < 0.20f)
 				{
 					if ((RANDOM_LONG(1, 100) <= 20) &&
 						 (pBot->f_medic_yell_time <= gpGlobals->time))
@@ -2666,7 +2666,7 @@ void BotThink( bot_t *pBot )
 						// yell "saveme" in case there's a medic within earshot
 						FakeClientCommand(pEdict, "saveme", nullptr, nullptr);
 
-						pBot->f_medic_yell_time = gpGlobals->time + 10.0;
+						pBot->f_medic_yell_time = gpGlobals->time + 10.0f;
 					}
 				}
 			}
@@ -2675,13 +2675,13 @@ void BotThink( bot_t *pBot )
 
 	if (pBot->f_medic_pause_time > gpGlobals->time)
 	{
-		pBot->f_move_speed = 0.0;
-		pBot->f_strafe_direction = 0.0;
+		pBot->f_move_speed = 0.0f;
+		pBot->f_strafe_direction = 0.0f;
 	}
 
 	if (pBot->f_grenade_search_time <= gpGlobals->time)
 	{
-		pBot->f_grenade_search_time = gpGlobals->time + 0.1;
+		pBot->f_grenade_search_time = gpGlobals->time + 0.1f;
 
 		// does the bot see any grenades laying about?
 		if (BotLookForGrenades( pBot ))
@@ -2691,17 +2691,17 @@ void BotThink( bot_t *pBot )
 	// do we have a grenade primed and ready to throw..
 	if (pBot->f_gren_throw_time > gpGlobals->time)
 	{
-		pBot->f_move_speed = 0.0;  // don't move while priming
+		pBot->f_move_speed = 0.0f;  // don't move while priming
 	}
-	else if (pBot->f_gren_throw_time + 5.0 > gpGlobals->time)
+	else if (pBot->f_gren_throw_time + 5.0f > gpGlobals->time)
 	{
 		// move backwards for 5.0 seconds after throwing grenade...
-		pBot->f_move_speed = -1.0 * pBot->f_move_speed;
+		pBot->f_move_speed = -1.0f * pBot->f_move_speed;
 	}
-	else if (pBot->f_grenade_found_time + 1.0 > gpGlobals->time)
+	else if (pBot->f_grenade_found_time + 1.0f > gpGlobals->time)
 	{
 		// move backwards for 1.0 second after seeing a grenade...
-		pBot->f_move_speed = -1.0 * pBot->f_move_speed;
+		pBot->f_move_speed = -1.0f * pBot->f_move_speed;
 	}
 
 	pEdict->v.v_angle.z = 0;  // reset roll to 0 (straight up and down)
@@ -2714,7 +2714,7 @@ void BotThink( bot_t *pBot )
 	// save the previous speed (for checking if stuck)
 	pBot->f_prev_speed = pBot->f_move_speed;
 
-	f_strafe_speed = pBot->f_strafe_direction * (pBot->f_move_speed / 2.0);
+	f_strafe_speed = pBot->f_strafe_direction * (pBot->f_move_speed / 2.0f);
 
 	g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
 										  f_strafe_speed, 0, pEdict->v.button, 0, pBot->msecval);

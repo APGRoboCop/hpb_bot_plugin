@@ -127,7 +127,7 @@ void pfnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *
 				// catch this message for ALL players, NOT just bots...
 				botMsgFunction = BotClient_HolyWars_Halo;
 				
-				botMsgIndex = (int)ed;  // save the edict instead of the bot index
+				botMsgIndex = int(ed);  // save the edict instead of the bot index
 			}
 			else
 			{

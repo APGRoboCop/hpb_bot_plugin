@@ -25,7 +25,7 @@ bool BotLookForMedic( bot_t *pBot );
 bool BotLookForGrenades( bot_t *pBot );
 void BotThink( bot_t *pBot );
 
-void LoadBotModels(void);
+void LoadBotModels();
 
 void BotFixIdealPitch( edict_t *pEdict );
 float BotChangePitch( bot_t *pBot, float speed );
@@ -47,7 +47,7 @@ bool BotCheckWallOnLeft( bot_t *pBot );
 bool BotCheckWallOnRight( bot_t *pBot );
 void BotLookForDrop( bot_t *pBot );
 
-void BotCheckTeamplay(void);
+void BotCheckTeamplay();
 edict_t *BotFindEnemy( bot_t *pBot );
 Vector BotBodyTarget( edict_t *pBotEnemy, bot_t *pBot );
 bool BotFireWeapon( Vector v_enemy, bot_t *pBot, int weapon_choice);

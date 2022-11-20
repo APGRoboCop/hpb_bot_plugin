@@ -151,7 +151,7 @@ void UTIL_HostSay( edict_t *pEntity, int teamonly, char *message )
 		sprintf( text, "%c%s: ", 2, STRING( pEntity->v.netname ) );
 
 	const int j = sizeof(text) - 2 - strlen(text);  // -2 for /n and null terminator
-	if ( (int)strlen(message) > j )
+	if ( int(strlen(message)) > j )
 		message[j] = 0;
 
 	strcat( text, message );
