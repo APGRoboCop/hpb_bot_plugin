@@ -1471,7 +1471,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity)
                       pEntity->v.pContainingEntity, &tr );
 
       // if waypoint is visible from current position (even behind head)...
-      if (tr.flFraction >= 1.0)
+      if (tr.flFraction >= 1.0f)
       {
          // check for special case of both waypoints being underwater...
          if ((POINT_CONTENTS( v_src ) == CONTENTS_WATER) &&
@@ -1483,7 +1483,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity)
          // check for special case of waypoint being suspended in mid-air...
 
          // is dest waypoint higher than src? (45 is max jump height)
-         if (v_dest.z > (v_src.z + 45.0))
+         if (v_dest.z > (v_src.z + 45.0f))
          {
 	         const Vector v_new_src = v_dest;
             Vector v_new_dest = v_dest;
@@ -1494,7 +1494,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity)
                            pEntity->v.pContainingEntity, &tr);
 
             // check if we didn't hit anything, if not then it's in mid-air
-            if (tr.flFraction >= 1.0)
+            if (tr.flFraction >= 1.0f)
             {
                return FALSE;  // can't reach this one
             }
@@ -1558,7 +1558,7 @@ int WaypointFindReachable(edict_t *pEntity, float range, int team)
 
    // find the nearest waypoint...
 
-   float min_distance = 9999.0;
+   float min_distance = 9999.0f;
 
    for (int i = 0; i < num_waypoints; i++)
    {
@@ -1581,7 +1581,7 @@ int WaypointFindReachable(edict_t *pEntity, float range, int team)
          UTIL_TraceLine( pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin,
                          ignore_monsters, pEntity->v.pContainingEntity, &tr );
 
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
          {
             if (WaypointReachable(pEntity->v.origin, waypoints[i].origin, pEntity))
             {
@@ -1606,7 +1606,7 @@ void WaypointPrintInfo(edict_t *pEntity)
    char msg[80];
 
    // find the nearest waypoint...
-   const int index = WaypointFindNearest(pEntity, 50.0, -1);
+   const int index = WaypointFindNearest(pEntity, 50.0f, -1);
 
    if (index == -1)
       return;
@@ -1709,7 +1709,7 @@ void WaypointThink(edict_t *pEntity)
 
       if (distance > 200)
       {
-         min_distance = 9999.0;
+         min_distance = 9999.0f;
 
          // check that no other reachable waypoints are nearby...
          for (i=0; i < num_waypoints; i++)
@@ -1735,7 +1735,7 @@ void WaypointThink(edict_t *pEntity)
       }
    }
 
-   min_distance = 9999.0;
+   min_distance = 9999.0f;
 
    if (g_waypoint_on)  // display the waypoints if turned on...
    {
@@ -1754,7 +1754,7 @@ void WaypointThink(edict_t *pEntity)
                min_distance = distance;
             }
 
-            if ((wp_display_time[i] + 1.0) < gpGlobals->time)
+            if ((wp_display_time[i] + 1.0f) < gpGlobals->time)
             {
                if (waypoints[i].flags & W_FL_CROUCH)
                {
@@ -1786,7 +1786,7 @@ void WaypointThink(edict_t *pEntity)
          // check if player is close enough to a waypoint and time to draw path...
          if ((min_distance <= 50) && (f_path_time <= gpGlobals->time))
          {
-	         f_path_time = gpGlobals->time + 1.0;
+	         f_path_time = gpGlobals->time + 1.0f;
 
             PATH* p = paths[index];
 
