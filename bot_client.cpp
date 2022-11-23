@@ -851,7 +851,7 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index)
 
                               // set chat flag and time to chat...
                               bots[index].b_bot_say = TRUE;
-                              bots[index].f_bot_say = gpGlobals->time + 5.0 + RANDOM_FLOAT(0.0, 5.0);
+                              bots[index].f_bot_say = gpGlobals->time + 5.0f + RANDOM_FLOAT(0.0, 5.0);
 
                               int recent_count = 0;
 
@@ -1100,7 +1100,7 @@ void BotClient_Valve_ScreenFade(void *p, int bot_index)
             state = 0;
 
             const int length = (duration + hold_time) / 4096;
-            bots[bot_index].blinded_time = gpGlobals->time + length - 2.0;
+            bots[bot_index].blinded_time = gpGlobals->time + length - 2.0f;
       }
       else
       {

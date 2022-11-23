@@ -2186,8 +2186,8 @@ void BotThink( bot_t *pBot )
 
 						pBot->b_build_sentrygun = FALSE;
 
-						pBot->f_engineer_build_time = gpGlobals->time + 20.0;
-						pBot->f_pause_time = gpGlobals->time + 5.0;
+						pBot->f_engineer_build_time = gpGlobals->time + 20.0f;
+						pBot->f_pause_time = gpGlobals->time + 5.0f;
 					}
 				}
 				else  // need to "attack" this sentrygun to upgrade it...

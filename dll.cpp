@@ -352,7 +352,7 @@ int Spawn( edict_t *pent )
 			prev_num_bots = num_bots;
 			num_bots = 0;
 
-			bot_check_time = gpGlobals->time + 60.0;
+			bot_check_time = gpGlobals->time + 60.0f;
 		}
 
 		if ((mod_id == HOLYWARS_DLL) && (jumppad_off) &&
@@ -558,7 +558,7 @@ BOOL ClientConnect( edict_t *pEntity, const char *pszName, const char *pszAddres
 		if (strcmp(pszAddress, "127.0.0.1") != 0)
 		{
 			// don't try to add bots for 60 seconds, give client time to get added
-			bot_check_time = gpGlobals->time + 60.0;
+			bot_check_time = gpGlobals->time + 60.0f;
 
 			for (i=0; i < 32; i++)
 			{
@@ -618,7 +618,7 @@ void ClientDisconnect( edict_t *pEntity )
 	}
 
 	// 1.2.6 #20 Fix occasional "FATAL ERROR (shutting down): SZ_GetSpace"??
-	bot_check_time = gpGlobals->time + 5.0;
+	bot_check_time = gpGlobals->time + 7.0f;
 
 	RETURN_META (MRES_IGNORED);
 }
@@ -658,7 +658,7 @@ void ClientCommand( edict_t *pEntity )
 		{
 			BotCreate( pEntity, arg1, arg2, arg3, arg4, arg5 );
 
-			bot_check_time = gpGlobals->time + 5.0;
+			bot_check_time = gpGlobals->time + 5.0f;
 
 			RETURN_META (MRES_SUPERCEDE);
 		}
@@ -1385,9 +1385,9 @@ void StartFrame()
 				}
 
 				if (IsDedicatedServer)
-					bot_cfg_pause_time = gpGlobals->time + 5.0;
+					bot_cfg_pause_time = gpGlobals->time + 5.0f;
 				else
-					bot_cfg_pause_time = gpGlobals->time + 20.0;
+					bot_cfg_pause_time = gpGlobals->time + 20.0f;
 			}
 			else
 			{
@@ -1400,7 +1400,7 @@ void StartFrame()
 					{
 						bots[index].is_used = FALSE;
 						bots[index].respawn_state = 0;
-						bots[index].f_kick_time = 0.0;
+						bots[index].f_kick_time = 0.0f;
 					}
 
 					if (bots[index].is_used)  // is this slot used?
@@ -1421,25 +1421,25 @@ void StartFrame()
 
 				// set the respawn time
 				if (IsDedicatedServer)
-					respawn_time = gpGlobals->time + 5.0;
+					respawn_time = gpGlobals->time + 5.0f;
 				else
-					respawn_time = gpGlobals->time + 20.0;
+					respawn_time = gpGlobals->time + 20.0f;
 			}
 
-			bot_check_time = gpGlobals->time + 60.0;
+			bot_check_time = gpGlobals->time + 60.0f;
 		}
 
 		if (!IsDedicatedServer)
 		{
 			if ((listenserver_edict != nullptr) && (welcome_sent == FALSE) &&
-				 (welcome_time < 1.0))
+				 (welcome_time < 1.0f))
 			{
 				// are they out of observer mode yet?
 				if (IsAlive(listenserver_edict))
-					welcome_time = gpGlobals->time + 5.0;  // welcome in 5 seconds
+					welcome_time = gpGlobals->time + 5.0f;  // welcome in 5 seconds
 			}
 
-			if ((welcome_time > 0.0) && (welcome_time < gpGlobals->time) &&
+			if ((welcome_time > 0.0f) && (welcome_time < gpGlobals->time) &&
 				 (welcome_sent == FALSE))
 			{
 				char version[80];
@@ -1568,13 +1568,13 @@ void StartFrame()
 				bot_chat_lower_percent = lower;	 // restore global chat percent
 				bot_reaction_time = react;
 
-				respawn_time = gpGlobals->time + 2.0;  // set next respawn time
+				respawn_time = gpGlobals->time + 2.0f;  // set next respawn time
 
-				bot_check_time = gpGlobals->time + 5.0;
+				bot_check_time = gpGlobals->time + 5.0f;
 			}
 			else
 			{
-				respawn_time = 0.0;
+				respawn_time = 0.0f;
 			}
 		}
 
@@ -1613,9 +1613,9 @@ void StartFrame()
 				}
 
 				if (IsDedicatedServer)
-					bot_cfg_pause_time = gpGlobals->time + 5.0;
+					bot_cfg_pause_time = gpGlobals->time + 5.0f;
 				else
-					bot_cfg_pause_time = gpGlobals->time + 20.0;
+					bot_cfg_pause_time = gpGlobals->time + 20.0f;
 			}
 
 			if (!IsDedicatedServer && !spawn_time_reset)
@@ -1626,17 +1626,17 @@ void StartFrame()
 					{
 						spawn_time_reset = TRUE;
 
-						if (respawn_time >= 1.0)
-							respawn_time = min(respawn_time, gpGlobals->time + (float)1.0);
+						if (respawn_time >= 1.0f)
+							respawn_time = min(respawn_time, gpGlobals->time + 1.0f);
 
-						if (bot_cfg_pause_time >= 1.0)
-							bot_cfg_pause_time = min(bot_cfg_pause_time, gpGlobals->time + (float)1.0);
+						if (bot_cfg_pause_time >= 1.0f)
+							bot_cfg_pause_time = min(bot_cfg_pause_time, gpGlobals->time + 1.0f);
 					}
 				}
 			}
 
 			if ((bot_cfg_fp) &&
-				 (bot_cfg_pause_time >= 1.0) && (bot_cfg_pause_time <= gpGlobals->time))
+				 (bot_cfg_pause_time >= 1.0f) && (bot_cfg_pause_time <= gpGlobals->time))
 			{
 				// process HPB_bot.cfg file options...
 				ProcessBotCfgFile();
@@ -1649,7 +1649,7 @@ void StartFrame()
 		{
 			int count = 0;
 
-			bot_check_time = gpGlobals->time + 5.0;
+			bot_check_time = gpGlobals->time + 5.0f;
 
 			for (i = 0; i < 32; i++)
 			{
@@ -2075,7 +2075,7 @@ void HPB_Bot_ServerCommand ()
 	{
 		BotCreate(nullptr, CMD_ARGV (2), CMD_ARGV (3), CMD_ARGV (4), CMD_ARGV (5), CMD_ARGV (6) );
 
-		bot_check_time = gpGlobals->time + 5.0;
+		bot_check_time = gpGlobals->time + 5.0f;
 	}
 	else if (strcmp(CMD_ARGV (1), "min_bots") == 0)
 	{

@@ -103,7 +103,7 @@ void BotClient_CS_ScreenFade(void *p, int bot_index);
 void BotClient_Gearbox_ScreenFade(void *p, int bot_index);
 void BotClient_FLF_ScreenFade(void *p, int bot_index);
 
-void BotClient_HolyWars_Halo(void *p, int bot_index);
+void BotClient_HolyWars_Halo(void *p, int edict);
 void BotClient_HolyWars_GameMode(void *p, int bot_index);
 void BotClient_HolyWars_HudText(void *p, int bot_index);
 
