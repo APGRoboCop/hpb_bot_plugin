@@ -4,12 +4,13 @@ Those are recompiled HPB_Bot for HLDS. No major changes apart from being compile
 
 Changelog v4.0.5:-
 
->> Windows builds recompiled using VS2013
+>> Windows builds recompiled using VS2023
 >> Definition 'WaypointFloyds' fixed it was missing 'unsigned'
 >> Definition 'UpdateClientData' fixed when it was unused
->> Added support for SteamPipe HLDM, Op4, DMC
+>> Added support for SteamPipe HLDM, Op4, DMC and TFC
+>> Added a 60Hz lock to prevent bots from losing speed at lower sys_ticrate
 >> Added 3rd Party Mod support for Wizard Wars v1.2.x and Swarm Mod.
->> Linux binary optimised for i686 and using GCC 4.8
+>> Linux binary optimised for i686 and using GCC 8
 >> Both builds optimised for later Pentium SSE2 Archs
 
 Note: This DLL package is not fully tested on all servers, please report to robocop@lycos.co.uk or report on our forums.
