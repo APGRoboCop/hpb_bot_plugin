@@ -40,7 +40,7 @@ void BotStartGame( bot_t *pBot )
 	if ((mod_id == TFC_DLL) || (mod_id == WIZARDWARS_DLL) || (mod_id == SWARM_DLL))
 	{
 		if ((pBot->start_action == MSG_TFC_IDLE) &&
-			(pBot->f_create_time + 3.0 <= gpGlobals->time))
+			(pBot->f_create_time + 3.0f <= gpGlobals->time))
 		{
 			pBot->start_action = MSG_TFC_TEAM_SELECT;  // force team selection
 		}

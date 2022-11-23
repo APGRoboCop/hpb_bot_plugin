@@ -407,14 +407,11 @@ bool FInViewCone(Vector *pOrigin, edict_t *pEdict)
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	if ( flDot > 0.50 )  // 60 degree field of view
+	if ( flDot > 0.60f )  // field of view
 	{
 		return TRUE;
 	}
-	else
-	{
-		return FALSE;
-	}
+	return FALSE;
 }
 
 
@@ -434,14 +431,11 @@ bool FVisible( const Vector &vecOrigin, edict_t *pEdict )
 
 	UTIL_TraceLine(vecLookerOrigin, vecOrigin, ignore_monsters, ignore_glass, pEdict, &tr);
 
-	if (tr.flFraction != 1.0)
+	if (tr.flFraction != 1.0f)
 	{
 		return FALSE;  // Line of sight is not established
 	}
-	else
-	{
-		return TRUE;  // line of sight is valid.
-	}
+	return TRUE;  // line of sight is valid.
 }
 
 Vector Center(edict_t * pEdict)
@@ -485,7 +479,7 @@ void UTIL_SelectWeapon(edict_t *pEdict, int weapon_index)
 
 Vector VecBModelOrigin(edict_t *pEdict)
 {
-	return pEdict->v.absmin + (pEdict->v.size * 0.5);
+	return pEdict->v.absmin + (pEdict->v.size * 0.5f);
 }
 
 
@@ -493,7 +487,7 @@ bool UpdateSounds(edict_t *pEdict, edict_t *pPlayer)
 {
 	static bool check_footstep_sounds = TRUE;
 	static float footstep_sounds_on;
-	const float sensitivity = 1.0;
+	const float sensitivity = 1.0f;
 
 	// update sounds made by this player, alert bots if they are nearby...
 
@@ -506,9 +500,9 @@ bool UpdateSounds(edict_t *pEdict, edict_t *pPlayer)
 	if (footstep_sounds_on > 0.0)
 	{
 		// check if this player is moving fast enough to make sounds...
-		if (pPlayer->v.velocity.Length2D() > 220.0)
+		if (pPlayer->v.velocity.Length2D() > 220.0f)
 		{
-			const float volume = 500.0;  // volume of sound being made (just pick something)
+			const float volume = 500.0f;  // volume of sound being made (just pick something)
 
 			const Vector v_sound = pPlayer->v.origin - pEdict->v.origin;
 
