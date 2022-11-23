@@ -195,15 +195,15 @@ typedef struct
    int chat_swap_percent;
    int chat_lower_percent;
 
+   //TODO: Fix by Cheeseh (RCBot)
+   //float fUpdateTime;
+   //float fLastRunPlayerMoveTime;
+	
 // TheFatal - START
-   //int msecnum;
-   //float msecdel;
-   //float msecval;
+   int msecnum;
+   float msecdel;
+   float msecval;
 // TheFatal - END
-
-	//Fix by Cheeseh (RCBot)
-   float fUpdateTime;
-   float fLastRunPlayerMoveTime;
 
    // things from pev in CBasePlayer...
    int bot_team;

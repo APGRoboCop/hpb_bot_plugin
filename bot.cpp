@@ -1496,14 +1496,32 @@ void BotThink( bot_t *pBot )
 	if (pBot->name[0] == 0)  // name filled in yet?
 		strcpy(pBot->name, STRING(pBot->pEdict->v.netname));
 
+	//TODO: Fix by Cheeseh (RCBot)
+	//const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
+	//pBot->fLastRunPlayerMoveTime = gpGlobals->time;
+// TheFatal - START from Advanced Bot Framework (Thanks Rich!)
 
-	// Fix by Cheeseh (RCBot)
-	const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
-	pBot->fLastRunPlayerMoveTime = gpGlobals->time;
+	// adjust the millisecond delay based on the frame rate interval...
+	if (pBot->msecdel <= gpGlobals->time)
+	{
+		pBot->msecdel = gpGlobals->time + 0.5f;
+		if (pBot->msecnum > 0)
+			pBot->msecval = 450.0f/pBot->msecnum;
+		pBot->msecnum = 0;
+	}
+	else
+		pBot->msecnum++;
 
-	const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
-	pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
-	
+	if (pBot->msecval < 1)	 // don't allow msec to be less than 1...
+		pBot->msecval = 1;
+
+	if (pBot->msecval > 100)  // ...or greater than 100
+		pBot->msecval = 100;
+
+// TheFatal - END
+
+	pBot->f_frame_time = pBot->msecval / 1000;  // calculate frame time
+
 	
 	pEdict->v.button = 0;
 	pBot->f_move_speed = 0.0f;
@@ -1522,7 +1540,7 @@ void BotThink( bot_t *pBot )
 		BotStartGame( pBot );
 
 		g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
-											  0, 0, pEdict->v.button, 0, msecval);
+											  0, 0, pEdict->v.button, 0, pBot->msecval);
 
 		return;
 	}
@@ -1610,7 +1628,7 @@ void BotThink( bot_t *pBot )
 			pEdict->v.button = IN_ATTACK;
 
 		g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
-											  0, 0, pEdict->v.button, 0, msecval);
+											  0, 0, pEdict->v.button, 0, pBot->msecval);
 
 		return;
 	}
@@ -1762,7 +1780,7 @@ void BotThink( bot_t *pBot )
 		BotChangeYaw( pBot, pEdict->v.yaw_speed / 2 );
 
 		g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
-											  0, 0, pEdict->v.button, 0, msecval);
+											  0, 0, pEdict->v.button, 0, pBot->msecval);
 
 		return;
 	}
@@ -2542,7 +2560,7 @@ void BotThink( bot_t *pBot )
 					f_strafe_speed = 0.0f;
 
 					g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
-														  f_strafe_speed, 0, pEdict->v.button, 0, msecval);
+														  f_strafe_speed, 0, pEdict->v.button, 0, pBot->msecval);
 
 					return;
 				}
@@ -2701,7 +2719,7 @@ void BotThink( bot_t *pBot )
 	f_strafe_speed = pBot->f_strafe_direction * (pBot->f_move_speed / 2.0f);
 
 	g_engfuncs.pfnRunPlayerMove( pEdict, pEdict->v.v_angle, pBot->f_move_speed,
-										  f_strafe_speed, 0, pEdict->v.button, 0, msecval);
+										  f_strafe_speed, 0, pEdict->v.button, 0, pBot->msecval);
 
 	return;
 }
