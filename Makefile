@@ -28,8 +28,8 @@ ${TARGET}.so: ${OBJ}
 	g++ -fPIC -shared -o $@ ${OBJ} -ldl -lm
 
 clean:
-	rm -f *.o
-	rm -f *.so
+	-rm -f *.o
+	-rm -f *.so	
 
 %.o:	%.cpp
 	g++ ${CPPFLAGS} -c $< -o $@
