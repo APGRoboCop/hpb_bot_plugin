@@ -1,9 +1,10 @@
 TARGET = hpb_bot_mm
 ARCHFLAG = march=i686
-BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp
+BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -D_stricmp=strcasecmp -D_strcmpi=strcasecmp \
+			-static-libgcc -static-libstdc++ -std=gnu++14
 
-OPTFLAGS = -mtune=generic -mmmx -msse -msse2 -O2 -m32 -mfpmath=sse -pipe -s \
-		-Wno-write-strings -falign-loops=2 -falign-jumps=2 -falign-functions=2 \
+OPTFLAGS =	-mtune=generic -mmmx -msse -msse2 -O2 -m32 -mfpmath=sse -s \
+			-Wno-write-strings -fomit-frame-pointer -funsafe-math-optimizations
 
 SDKTOP = ../metamod-p
 HLSDK = ../hlsdk-2.3-p4/multiplayer

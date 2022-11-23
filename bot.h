@@ -196,10 +196,14 @@ typedef struct
    int chat_lower_percent;
 
 // TheFatal - START
-   int msecnum;
-   float msecdel;
-   float msecval;
+   //int msecnum;
+   //float msecdel;
+   //float msecval;
 // TheFatal - END
+
+	//Fix by Cheeseh (RCBot)
+   float fUpdateTime;
+   float fLastRunPlayerMoveTime;
 
    // things from pev in CBasePlayer...
    int bot_team;

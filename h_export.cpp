@@ -65,7 +65,7 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 #ifndef __linux__
       strcpy(game_dll_filename, "valve\\dlls\\hl.dll");
 #else
-      strcpy(game_dll_filename, "valve/dlls/hl_i386.so");
+      strcpy(game_dll_filename, "valve/dlls/hl.so");
 #endif
    }
    else if (strcmpi(mod_name, "tfc") == 0)
@@ -74,7 +74,7 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 #ifndef __linux__
       strcpy(game_dll_filename, "tfc\\dlls\\tfc.dll");
 #else
-      strcpy(game_dll_filename, "tfc/dlls/tfc_i386.so");
+      strcpy(game_dll_filename, "tfc/dlls/tfc.so");
 #endif
    }
    else if (strcmpi(mod_name, "cstrike") == 0)
@@ -83,7 +83,7 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 #ifndef __linux__
       strcpy(game_dll_filename, "cstrike\\dlls\\mp.dll");
 #else
-      strcpy(game_dll_filename, "cstrike/dlls/cs_i386.so");
+      strcpy(game_dll_filename, "cstrike/dlls/cs.so");
 #endif
    }
    else if (strcmpi(mod_name, "gearbox") == 0)
@@ -92,7 +92,7 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 #ifndef __linux__
       strcpy(game_dll_filename, "gearbox\\dlls\\opfor.dll");
 #else
-      strcpy(game_dll_filename, "gearbox/dlls/opfor_i386.so");
+      strcpy(game_dll_filename, "gearbox/dlls/opfor.so");
 #endif
    }
    else if (strcmpi(mod_name, "frontline") == 0)
@@ -119,7 +119,7 @@ void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *p
 #ifndef __linux__
       strcpy(game_dll_filename, "dmc\\dlls\\dmc.dll");
 #else
-      strcpy(game_dll_filename, "dmc/dlls/dmc_i386.so");
+      strcpy(game_dll_filename, "dmc/dlls/dmc.so");
 #endif
    }
    else if (strnicmp(mod_name, "wizardwars", 10) == 0)
