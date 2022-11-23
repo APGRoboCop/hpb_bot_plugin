@@ -372,7 +372,7 @@ int WaypointFindNearest(edict_t *pEntity, float range, int team)
 
 
 // find the nearest waypoint to the source postition and return the index
-int WaypointFindNearest(Vector v_src, edict_t *pEntity, float range, int team)
+int WaypointFindNearest(const Vector& v_src, edict_t *pEntity, float range, int team)
 {
 	TraceResult tr;
 
@@ -513,7 +513,7 @@ int WaypointFindNearestGoal(edict_t *pEntity, int src, int team, int flags, int 
 }
 
 
-int WaypointFindNearestGoal(Vector v_src, edict_t *pEntity, float range, int team, int flags)
+int WaypointFindNearestGoal(const Vector& v_src, edict_t *pEntity, float range, int team, int flags)
 {
 	if (num_waypoints < 1)
       return -1;
@@ -652,7 +652,7 @@ int WaypointFindRandomGoal(edict_t *pEntity, int team, int flags, int exclude[])
 }
 
 
-int WaypointFindRandomGoal(Vector v_src, edict_t *pEntity, float range, int team, int flags)
+int WaypointFindRandomGoal(const Vector& v_src, edict_t *pEntity, float range, int team, int flags)
 {
    int index;
    int indexes[200];
@@ -698,10 +698,10 @@ int WaypointFindRandomGoal(Vector v_src, edict_t *pEntity, float range, int team
 }
 
 
-int WaypointFindNearestAiming(Vector v_origin)
+int WaypointFindNearestAiming(const Vector& v_origin)
 {
 	int min_index = -1;
-   int min_distance = 9999.0;
+   int min_distance = 9999;
 
 	if (num_waypoints < 1)
       return -1;
@@ -728,7 +728,7 @@ int WaypointFindNearestAiming(Vector v_origin)
 }
 
 
-void WaypointDrawBeam(edict_t *pEntity, const Vector start, const Vector end, int width,
+void WaypointDrawBeam(edict_t *pEntity, const Vector& start, const Vector& end, int width,
         int noise, int red, int green, int blue, int brightness, int speed)
 {
    MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
@@ -756,7 +756,7 @@ void WaypointDrawBeam(edict_t *pEntity, const Vector start, const Vector end, in
 }
 
 
-void WaypointSearchItems(edict_t *pEntity, Vector origin, int wpt_index)
+void WaypointSearchItems(edict_t *pEntity, const Vector& origin, int wpt_index)
 {
    edict_t *pent = nullptr;
    const float radius = 40;
@@ -1485,7 +1485,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity)
          // is dest waypoint higher than src? (45 is max jump height)
          if (v_dest.z > (v_src.z + 45.0f))
          {
-	         const Vector v_new_src = v_dest;
+	         const Vector& v_new_src = v_dest;
             Vector v_new_dest = v_dest;
 
             v_new_dest.z = v_new_dest.z - 50;  // straight down 50 units
@@ -1921,7 +1921,7 @@ void WaypointRouteInit()
 
          UTIL_BuildFileName(filename2, "maps", mapname);
 
-         if (access(filename2, 0) == 0)  // does the .HPB_wpX file exist?
+         if (_access(filename2, 0) == 0)  // does the .HPB_wpX file exist?
          {
 	         const int file1 = open(filename, O_RDONLY);
 	         const int file2 = open(filename2, O_RDONLY);

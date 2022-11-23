@@ -151,7 +151,7 @@ void UTIL_HostSay( edict_t *pEntity, int teamonly, char *message )
 		sprintf( text, "%c%s: ", 2, STRING( pEntity->v.netname ) );
 
 	const int j = sizeof(text) - 2 - strlen(text);  // -2 for /n and null terminator
-	if ( int(strlen(message)) > j )
+	if ( static_cast<int>(strlen(message)) > j )
 		message[j] = 0;
 
 	strcat( text, message );
@@ -300,7 +300,7 @@ int UTIL_GetTeam(edict_t *pEntity)
 			{
 				// check that team isn't defined twice
 				for (i=0; i < num_teams; i++)
-					if (stricmp(pName, team_names[i]) == 0)
+					if (_stricmp(pName, team_names[i]) == 0)
 						break;
 				if (i == num_teams)
 				{
@@ -316,7 +316,7 @@ int UTIL_GetTeam(edict_t *pEntity)
 
 		for (int index=0; index < num_teams; index++)
 		{
-			if (stricmp(model_name, team_names[index]) == 0)
+			if (_stricmp(model_name, team_names[index]) == 0)
 				return index;
 		}
 
@@ -627,15 +627,15 @@ void GetGameDir (char *game_dir)
 
 	GET_GAME_DIR (game_dir); // call the engine macro and let it mallocate for the char pointer
 
-	unsigned char length = strlen(game_dir); // get the length of the returned string
+	size_t length = strlen(game_dir); // get the length of the returned string
 	length--; // ignore the trailing string terminator
 
 	// format the returned string to get the last directory name
-	unsigned char fieldstop = length;
+	size_t fieldstop = length;
 	while (((game_dir[fieldstop] == '\\') || (game_dir[fieldstop] == '/')) && (fieldstop > 0))
 		fieldstop--; // shift back any trailing separator
 
-	unsigned char fieldstart = fieldstop;
+	size_t fieldstart = fieldstop;
 	while ((game_dir[fieldstart] != '\\') && (game_dir[fieldstart] != '/') && (fieldstart > 0))
 		fieldstart--; // shift back to the start of the last subdirectory name
 

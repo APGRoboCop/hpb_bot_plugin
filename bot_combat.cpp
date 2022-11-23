@@ -37,19 +37,19 @@ int halo_status = HW_WAIT_SPAWN;
 int holywars_gamemode = 0;  // 0=deathmatch, 1=halo, 2=instagib
 
 float react_delay_min[3][5] = {
-	{0.01, 0.02, 0.03, 0.04, 0.05},
-	{0.07, 0.09, 0.12, 0.14, 0.17},
-	{0.10, 0.12, 0.15, 0.18, 0.21}
+	{0.01f, 0.02f, 0.03f, 0.04f, 0.05f},
+	{0.07f, 0.09f, 0.12f, 0.14f, 0.17f},
+	{0.10f, 0.12f, 0.15f, 0.18f, 0.21f}
 };
 
 float react_delay_max[3][5] = {
-	{0.04, 0.06, 0.08, 0.10, 0.12},
-	{0.11, 0.14, 0.18, 0.21, 0.25},
-	{0.15, 0.18, 0.22, 0.25, 0.30}
+	{0.04f, 0.06f, 0.08f, 0.10f, 0.12f},
+	{0.11f, 0.14f, 0.18f, 0.21f, 0.25f},
+	{0.15f, 0.18f, 0.22f, 0.25f, 0.30f}
 };
 
-float aim_tracking_x_scale[5] = {5.0, 4.0, 3.2, 2.5, 2.0};
-float aim_tracking_y_scale[5] = {5.0, 4.0, 3.2, 2.5, 2.0};
+float aim_tracking_x_scale[5] = {5.0f, 4.0f, 3.2f, 2.5f, 2.0f};
+float aim_tracking_y_scale[5] = {5.0f, 4.0f, 3.2f, 2.5f, 2.0f};
 
 
 typedef struct
@@ -1121,11 +1121,11 @@ edict_t *BotFindEnemy( bot_t *pBot )
 			{
 				if (pBot->f_medic_check_health_time <= gpGlobals->time)
 				{
-					pBot->f_medic_check_health_time = gpGlobals->time + 5.0;
+					pBot->f_medic_check_health_time = gpGlobals->time + 5.0f;
 					pBot->f_heal_percent = RANDOM_FLOAT(90.0, 120.0);
 				}
 				
-				if ((pBot->pBotEnemy->v.health / pBot->pBotEnemy->v.max_health) * 100.0 >
+				if ((pBot->pBotEnemy->v.health / pBot->pBotEnemy->v.max_health) * 100.0f >
 					pBot->f_heal_percent)
 				{
 					pBot->pBotEnemy = nullptr;  // player is healed, null out pointer
@@ -1216,7 +1216,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 					continue;
 				
 				// check if player needs to be healed...
-				if ((pPlayer->v.health / pPlayer->v.max_health) > 0.80)
+				if ((pPlayer->v.health / pPlayer->v.max_health) > 0.80f)
 					continue;  // health greater than 70% so ignore
 				
 				vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
@@ -1554,7 +1554,7 @@ edict_t *BotFindEnemy( bot_t *pBot )
 
 	// has the bot NOT seen an ememy for at least 5 seconds (time to reload)?
 	if ((pBot->f_bot_see_enemy_time > 0) &&
-		((pBot->f_bot_see_enemy_time + 5.0) <= gpGlobals->time))
+		((pBot->f_bot_see_enemy_time + 5.0f) <= gpGlobals->time))
 	{
 		pBot->f_bot_see_enemy_time = -1;  // so we won't keep reloading
 		
@@ -1564,8 +1564,8 @@ edict_t *BotFindEnemy( bot_t *pBot )
 		}
 		
 		// initialize aim tracking angles...
-		pBot->f_aim_x_angle_delta = 5.0;
-		pBot->f_aim_y_angle_delta = 5.0;
+		pBot->f_aim_x_angle_delta = 5.0f;
+		pBot->f_aim_y_angle_delta = 5.0f;
 	}
 
 	return (pNewEnemy);
@@ -1581,7 +1581,7 @@ Vector BotBodyTarget(edict_t * pBotEnemy, bot_t * pBot)
 // use (assuming enough ammo exists for that weapon)
 // BotFireWeapon will return TRUE if weapon was fired, FALSE otherwise
 
-bool BotFireWeapon(const Vector v_enemy, bot_t *pBot, int weapon_choice)
+bool BotFireWeapon(const Vector& v_enemy, bot_t *pBot, int weapon_choice)
 {
 	bot_weapon_select_t *pSelect = nullptr;
 	bot_fire_delay_t *pDelay = nullptr;
@@ -1967,7 +1967,7 @@ bool BotFireWeapon(const Vector v_enemy, bot_t *pBot, int weapon_choice)
 			{
 				// check if bot needs to duck down to hit enemy...
 				if (pBot->pBotEnemy->v.origin.z < (pEdict->v.origin.z - 30))
-					pBot->f_duck_time = gpGlobals->time + 1.0;
+					pBot->f_duck_time = gpGlobals->time + 1.0f;
 				
 				extern int bot_stop;
 				if (bot_stop == 2)
@@ -2079,8 +2079,8 @@ void BotShootAtEnemy( bot_t *pBot )
 		
 		// can the bot see the enemies feet?
 		
-		if ((tr.flFraction >= 1.0) ||
-			((tr.flFraction >= 0.95) &&
+		if ((tr.flFraction >= 1.0f) ||
+			((tr.flFraction >= 0.95f) &&
 			(strcmp("player", STRING(tr.pHit->v.classname)) == 0)))
 		{
 			// aim at the feet for RPG type weapons
@@ -2124,10 +2124,10 @@ void BotShootAtEnemy( bot_t *pBot )
 	const float delta_dist_x = fabs(d_x / pBot->f_frame_time);
 	const float delta_dist_y = fabs(d_y / pBot->f_frame_time);
 	
-	if ((delta_dist_x > 100.0) && (RANDOM_LONG(1, 100) < 40))
+	if ((delta_dist_x > 100.0f) && (RANDOM_LONG(1, 100) < 40))
 	{
 		pBot->f_aim_x_angle_delta += 
-			aim_tracking_x_scale[pBot->bot_skill] * pBot->f_frame_time * 0.8;
+			aim_tracking_x_scale[pBot->bot_skill] * pBot->f_frame_time * 0.8f;
 	}
 	else
 	{
@@ -2138,13 +2138,13 @@ void BotShootAtEnemy( bot_t *pBot )
 	if (RANDOM_LONG(1, 100) < ((pBot->bot_skill+1) * 10))
 	{
 		pBot->f_aim_x_angle_delta += 
-			aim_tracking_x_scale[pBot->bot_skill] * pBot->f_frame_time * 0.5;
+			aim_tracking_x_scale[pBot->bot_skill] * pBot->f_frame_time * 0.5f;
 	}
 	
 	if ((delta_dist_y > 100.0) && (RANDOM_LONG(1, 100) < 40))
 	{
 		pBot->f_aim_y_angle_delta += 
-			aim_tracking_y_scale[pBot->bot_skill] * pBot->f_frame_time * 0.8;
+			aim_tracking_y_scale[pBot->bot_skill] * pBot->f_frame_time * 0.8f;
 	}
 	else
 	{
@@ -2155,22 +2155,22 @@ void BotShootAtEnemy( bot_t *pBot )
 	if (RANDOM_LONG(1, 100) < ((pBot->bot_skill+1) * 10))
 	{
 		pBot->f_aim_y_angle_delta += 
-			aim_tracking_y_scale[pBot->bot_skill] * pBot->f_frame_time * 0.5;
+			aim_tracking_y_scale[pBot->bot_skill] * pBot->f_frame_time * 0.5f;
 	}
 	
-	if (pBot->f_aim_x_angle_delta > 5.0)
-		pBot->f_aim_x_angle_delta = 5.0;
+	if (pBot->f_aim_x_angle_delta > 5.0f)
+		pBot->f_aim_x_angle_delta = 5.0f;
 	
-	if (pBot->f_aim_x_angle_delta < 0.01)
-		pBot->f_aim_x_angle_delta = 0.01;
+	if (pBot->f_aim_x_angle_delta < 0.01f)
+		pBot->f_aim_x_angle_delta = 0.01f;
 	
-	if (pBot->f_aim_y_angle_delta > 5.0)
-		pBot->f_aim_y_angle_delta = 5.0;
+	if (pBot->f_aim_y_angle_delta > 5.0f)
+		pBot->f_aim_y_angle_delta = 5.0f;
 	
-	if (pBot->f_aim_y_angle_delta < 0.01)
-		pBot->f_aim_y_angle_delta = 0.01;
+	if (pBot->f_aim_y_angle_delta < 0.01f)
+		pBot->f_aim_y_angle_delta = 0.01f;
 	
-	if (d_x < 0.0)
+	if (d_x < 0.0f)
 		d_x = d_x - pBot->f_aim_x_angle_delta;
 	else
 		d_x = d_x + pBot->f_aim_x_angle_delta;
@@ -2208,7 +2208,7 @@ void BotShootAtEnemy( bot_t *pBot )
 		{
 			const float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
 			
-			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50.0))
+			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50.0f))
 			{
 				if (RANDOM_LONG(1,100) < 50)
 					pEdict->v.button |= IN_DUCK;
@@ -2227,7 +2227,7 @@ void BotShootAtEnemy( bot_t *pBot )
 		{
 			const float distance = (pBot->pBotEnemy->v.origin - pEdict->v.origin).Length();
 			
-			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50))
+			if ((pBot->f_shoot_time <= gpGlobals->time) && (distance <= 50.0f))
 			{
 				BotFireWeapon( v_enemy, pBot, TF_WEAPON_SPANNER );
 				
@@ -2308,7 +2308,7 @@ void BotShootAtEnemy( bot_t *pBot )
 		if (!BotFireWeapon(v_enemy, pBot, 0))
 		{
 			pBot->pBotEnemy = nullptr;
-			pBot->f_bot_find_enemy_time = gpGlobals->time + 3.0;
+			pBot->f_bot_find_enemy_time = gpGlobals->time + 3.0f;
 		}
 	}
 }
@@ -2375,7 +2375,7 @@ bool BotGrenadeArm( bot_t *pBot )
 		
 		pBot->b_grenade_primed = TRUE;
 		
-		pBot->f_gren_throw_time = gpGlobals->time + 1.0 + RANDOM_FLOAT(0.5, 1.0);
+		pBot->f_gren_throw_time = gpGlobals->time + 1.0f + RANDOM_FLOAT(0.5, 1.0);
 		
 		if (pBot->grenade_type == 0)
 			FakeClientCommand(pEdict, "+gren1", nullptr, nullptr);
@@ -2390,7 +2390,7 @@ bool BotGrenadeArm( bot_t *pBot )
 		{
 			pBot->b_grenade_primed = TRUE;
 			
-			pBot->f_gren_throw_time = gpGlobals->time + 1.0 + RANDOM_FLOAT(0.5, 1.0);
+			pBot->f_gren_throw_time = gpGlobals->time + 1.0f + RANDOM_FLOAT(0.5, 1.0);
 			
 			if (pBot->grenade_type == 0)
 				FakeClientCommand(pEdict, "+gren1", nullptr, nullptr);

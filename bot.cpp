@@ -663,8 +663,8 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		BotEnt->v.yaw_speed = 250; // slightly faster than HLDM of 210
 
 		pBot->warmup = 0;  // for Front Line Force
-		pBot->idle_angle = 0.0;
-		pBot->idle_angle_time = 0.0;
+		pBot->idle_angle = 0.0f;
+		pBot->idle_angle_time = 0.0f;
 		pBot->round_end = 0;
 		pBot->defender = 0;
 
@@ -677,8 +677,8 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 		pBot->chat_swap_percent = bot_chat_swap_percent;
 		pBot->chat_lower_percent = bot_chat_lower_percent;
 		pBot->logo_percent = bot_logo_percent;
-		pBot->f_strafe_direction = 0.0;  // not strafing
-		pBot->f_strafe_time = 0.0;
+		pBot->f_strafe_direction = 0.0f;  // not strafing
+		pBot->f_strafe_time = 0.0f;
 		pBot->reaction_time = bot_reaction_time;
 
 		pBot->f_start_vote_time = gpGlobals->time + RANDOM_LONG(120, 600);
@@ -708,7 +708,7 @@ void BotCreate( edict_t *pPlayer, const char *arg1, const char *arg2,
 }
 
 
-int BotInFieldOfView(bot_t *pBot, const Vector dest)
+int BotInFieldOfView(bot_t *pBot, const Vector& dest)
 {
 	// find angles from source to destination...
 	Vector entity_angles = UTIL_VecToAngles( dest );
@@ -739,7 +739,7 @@ int BotInFieldOfView(bot_t *pBot, const Vector dest)
 }
 
 
-bool BotEntityIsVisible( bot_t *pBot, const Vector dest )
+bool BotEntityIsVisible( bot_t *pBot, const Vector& dest )
 {
 	TraceResult tr;
 
