@@ -7,6 +7,7 @@
 
 #ifndef __linux__
 #include <io.h>
+#define access _access
 #endif
 
 #include <fcntl.h>
@@ -52,7 +53,7 @@ bool g_auto_waypoint = FALSE;
 bool g_path_waypoint = FALSE;
 bool g_path_waypoint_enable = TRUE;
 Vector last_waypoint;
-float f_path_time = 0.0;
+float f_path_time = 0.0f;
 
 unsigned int route_num_waypoints;
 unsigned short *shortest_path[4] = {nullptr, nullptr, nullptr, nullptr};
@@ -128,12 +129,12 @@ void WaypointInit()
       waypoints[i].flags = 0;
       waypoints[i].origin = Vector(0,0,0);
 
-      wp_display_time[i] = 0.0;
+      wp_display_time[i] = 0.0f;
 
       paths[i] = nullptr;  // no paths allocated yet
    }
 
-   f_path_time = 0.0;  // reset waypoint path display time
+   f_path_time = 0.0f;  // reset waypoint path display time
 
    num_waypoints = 0;
 
@@ -382,7 +383,7 @@ int WaypointFindNearest(const Vector& v_src, edict_t *pEntity, float range, int 
    // find the nearest waypoint...
 
    int min_index = -1;
-   float min_distance = 9999.0;
+   float min_distance = 9999.0f;
 
    for (int index = 0; index < num_waypoints; index++)
    {
@@ -405,7 +406,7 @@ int WaypointFindNearest(const Vector& v_src, edict_t *pEntity, float range, int 
          UTIL_TraceLine( v_src, waypoints[index].origin, ignore_monsters,
                          pEntity->v.pContainingEntity, &tr );
 
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
          {
             min_index = index;
             min_distance = distance;
@@ -769,7 +770,7 @@ void WaypointSearchItems(edict_t *pEntity, const Vector& origin, int wpt_index)
    int tfc_backpack_index = -1;  // "null" out backpack index
    edict_t* nearest_pent = nullptr;
 
-   float min_distance = 9999.0;
+   float min_distance = 9999.0f;
 
    //********************************************************
    // look for the nearest health, armor, ammo, weapon, etc.
@@ -784,7 +785,7 @@ void WaypointSearchItems(edict_t *pEntity, const Vector& origin, int wpt_index)
          UTIL_TraceLine( origin, pent->v.origin, ignore_monsters, nullptr, &tr );
 
       // make sure entity is visible...
-      if (tr.flFraction >= 1.0)
+      if (tr.flFraction >= 1.0f)
       {
          strcpy(item_name, STRING(pent->v.classname));
 
@@ -1038,7 +1039,7 @@ void WaypointDelete(edict_t *pEntity)
    if (num_waypoints < 1)
       return;
 
-	const int index = WaypointFindNearest(pEntity, 50.0, -1);
+	const int index = WaypointFindNearest(pEntity, 50.0f, -1);
 
    if (index == -1)
       return;
@@ -1050,7 +1051,7 @@ void WaypointDelete(edict_t *pEntity)
        ((mod_id == FRONTLINE_DLL) && (waypoints[index].flags & W_FL_FLF_DEFEND)))
    {
 	   int min_index = -1;
-      int min_distance = 9999.0;
+      int min_distance = 9999;
 
 	   // search for nearby aiming waypoint and delete it also...
       for (int i = 0; i < num_waypoints; i++)
@@ -1075,7 +1076,7 @@ void WaypointDelete(edict_t *pEntity)
          waypoints[min_index].flags = W_FL_DELETED;  // not being used
          waypoints[min_index].origin = Vector(0,0,0);
 
-         wp_display_time[min_index] = 0.0;
+         wp_display_time[min_index] = 0.0f;
       }
    }
 
@@ -1134,7 +1135,7 @@ void WaypointCreatePath(edict_t *pEntity, int cmd)
 
    if (cmd == 1)  // assign source of path
    {
-      waypoint1 = WaypointFindNearest(pEntity, 50.0, -1);
+      waypoint1 = WaypointFindNearest(pEntity, 50.0f, -1);
 
       if (waypoint1 == -1)
       {
@@ -1154,7 +1155,7 @@ void WaypointCreatePath(edict_t *pEntity, int cmd)
 
    if (cmd == 2)  // assign dest of path and make path
    {
-      waypoint2 = WaypointFindNearest(pEntity, 50.0, -1);
+      waypoint2 = WaypointFindNearest(pEntity, 50.0f, -1);
 
       if ((waypoint1 == -1) || (waypoint2 == -1))
       {
@@ -1182,7 +1183,7 @@ void WaypointRemovePath(edict_t *pEntity, int cmd)
 
    if (cmd == 1)  // assign source of path
    {
-      waypoint1 = WaypointFindNearest(pEntity, 50.0, -1);
+      waypoint1 = WaypointFindNearest(pEntity, 50.0f, -1);
 
       if (waypoint1 == -1)
       {
@@ -1202,7 +1203,7 @@ void WaypointRemovePath(edict_t *pEntity, int cmd)
 
    if (cmd == 2)  // assign dest of path and make path
    {
-      waypoint2 = WaypointFindNearest(pEntity, 50.0, -1);
+      waypoint2 = WaypointFindNearest(pEntity, 50.0f, -1);
 
       if ((waypoint1 == -1) || (waypoint2 == -1))
       {
